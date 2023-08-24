@@ -17,6 +17,7 @@ public class SubCategoryController {
 	@Autowired
 	private SubCategoryService subCategoryService;
 	
+//	全てのサブカテゴリを取得する
 	@PostMapping("/find_subC")
 	public SubCategoryResponse findSubCategory(@RequestBody SubCategoryRequest req) {
 		return subCategoryService.findSubCategory(req);

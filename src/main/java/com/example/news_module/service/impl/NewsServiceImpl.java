@@ -23,6 +23,7 @@ public class NewsServiceImpl implements NewsService {
 	@Autowired
 	private NewsDao newsDao;
 
+//	ニュースを追加する
 	@Override
 	public NewsResponse addNews(NewsRequest req) {
 		String title = req.getTitle();
@@ -46,6 +47,7 @@ public class NewsServiceImpl implements NewsService {
 
 	}
 
+//	ニュースを更新する
 	@Override
 	public NewsResponse updataNews(NewsRequest req) {
 		String title = req.getTitle();
@@ -75,9 +77,20 @@ public class NewsServiceImpl implements NewsService {
 
 	}
 
+//	ニュースの公開状態を変更する
+	@Override
+	public NewsResponse changNewsStatus(NewsRequest req) {
+		Optional<News> news = newsDao.findById(req.getNewsId());
+		News target = news.get();
+		target.setOpen(!target.getOpen());
+		newsDao.save(target);
+		return new NewsResponse("更變開放狀態成功");
+
+	}
+
+//	選択したページの検索条件と一致するニュースを取得する（ユーザー側）
 	@Override
 	public NewsWithCategoryNameVo searchNewsF(NewsRequest req) {
-//		不輸入則搜尋全部所以不用設定防空白
 		String title = req.getTitle();
 		LocalDate startTime = req.getStartDate();
 		LocalDate endTime = req.getEndDate();
@@ -93,7 +106,6 @@ public class NewsServiceImpl implements NewsService {
 		List<Map<String, Object>> res = newsDao.findNewsByTitleOrCategoryOrDatePagingF(title, main, sub, startTime,
 				endTime, index);
 
-//		將找出的問卷物件重組
 		for (Map<String, Object> map : res) {
 			NewsWithCategoryNameVo e = new NewsWithCategoryNameVo();
 			for (String item : map.keySet()) {
@@ -158,6 +170,8 @@ public class NewsServiceImpl implements NewsService {
 
 	}
 
+//	検索条件と一致するニュースを取得する（ユーザー側）
+//	検索条件と一致するニュースを取得する
 	@Override
 	public NewsWithCategoryNameVo searchNewsAllF(NewsRequest req) {
 //		不輸入則搜尋全部所以不用設定防空白
@@ -238,16 +252,7 @@ public class NewsServiceImpl implements NewsService {
 		return new NewsWithCategoryNameVo(eList);
 	}
 
-	@Override
-	public NewsResponse changNewsStatus(NewsRequest req) {
-		Optional<News> news = newsDao.findById(req.getNewsId());
-		News target = news.get();
-		target.setOpen(!target.getOpen());
-		newsDao.save(target);
-		return new NewsResponse("更變開放狀態成功");
-
-	}
-
+//	選択したページのニュースを取得する（ユーザー側）
 	@Override
 	public NewsWithCategoryNameVo findAllNewsF(NewsRequest newReq) {
 
@@ -322,6 +327,7 @@ public class NewsServiceImpl implements NewsService {
 
 	}
 
+//	全てのニュースを取得する（ユーザー側）
 	@Override
 	public NewsWithCategoryNameVo findAllF() {
 
@@ -384,10 +390,14 @@ public class NewsServiceImpl implements NewsService {
 					break;
 				}
 			}
+
+//			ニュースが公開中なら公開時間が一週間超えたかどうかを判断する
 			if (e.getOpen()) {
+//				公開時間が七日超えたら公開状態を非公開にする
 				e.setOpen(e.getOpenDate().plusDays(7).compareTo(LocalDate.now()) < 0 ? false : true);
+//				公開状態が非公開になった場合はデータベースを更新する
 				if (!e.getOpen()) {
-					Optional<News> target = newsDao.findNewsById(e.getNewsId());
+					Optional<News> target = newsDao.findById(e.getNewsId());
 					News news = target.get();
 					news.setOpen(e.getOpen());
 					newsDao.save(news);
@@ -402,6 +412,7 @@ public class NewsServiceImpl implements NewsService {
 
 	}
 
+//	選択したページの検索条件と一致するニュースを取得する（管理者側）
 	@Override
 	public NewsWithCategoryNameVo searchNewsB(NewsRequest req) {
 //		不輸入則搜尋全部所以不用設定防空白
@@ -485,6 +496,7 @@ public class NewsServiceImpl implements NewsService {
 
 	}
 
+//	検索条件と一致するニュースを取得する（管理者側）
 	@Override
 	public NewsWithCategoryNameVo searchNewsAllB(NewsRequest req) {
 //		不輸入則搜尋全部所以不用設定防空白
@@ -567,6 +579,7 @@ public class NewsServiceImpl implements NewsService {
 
 	}
 
+//	選択したページのニュースを取得する（管理者側）
 	@Override
 	public NewsWithCategoryNameVo findAllNewsB(NewsRequest newReq) {
 
@@ -641,6 +654,7 @@ public class NewsServiceImpl implements NewsService {
 
 	}
 
+//	全てのニュースを取得する（管理者側）
 	@Override
 	public NewsWithCategoryNameVo findAllB() {
 
@@ -703,10 +717,13 @@ public class NewsServiceImpl implements NewsService {
 					break;
 				}
 			}
+//			ニュースが公開中なら公開時間が一週間超えたかどうかを判断する
 			if (e.getOpen()) {
+//				公開時間が七日超えたら公開状態を非公開にする
 				e.setOpen(e.getOpenDate().plusDays(7).compareTo(LocalDate.now()) < 0 ? false : true);
+//				公開状態が非公開になった場合はデータベースを更新する
 				if (!e.getOpen()) {
-					Optional<News> target = newsDao.findNewsById(e.getNewsId());
+					Optional<News> target = newsDao.findById(e.getNewsId());
 					News news = target.get();
 					news.setOpen(e.getOpen());
 					newsDao.save(news);
@@ -721,11 +738,11 @@ public class NewsServiceImpl implements NewsService {
 
 	}
 
+//	該当IDのニュースを取得する
 	@Override
 	public NewsResponse findNewsById(NewsRequest req) {
 		Integer id = req.getNewsId();
-		Optional<News> target = newsDao.findNewsById(id);
-
+		Optional<News> target = newsDao.findById(id);
 		News news = target.get();
 		return new NewsResponse(news);
 

@@ -15,6 +15,7 @@ public class MainCategoryController {
 	@Autowired
 	private MainCategoryService mainCategoryService;
 	
+//	全てのメインカテゴリを取得する
 	@GetMapping("/find_mainC")
 	public MainCategoryResponse findMainCategory() {
 		return mainCategoryService.findMainCategory();

@@ -12,6 +12,7 @@ import com.example.news_module.entity.MainCategory;
 @Repository
 public interface MainCategoryDao extends JpaRepository<MainCategory, Integer>{
 	
+//	全てのメインカテゴリを取得する
 	@Query(value ="select * from main_categorys",nativeQuery =true)
 	public List<Map<String, Object>> findAllMain();
 

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+//ニューステーブルを基づいて外部結合によりメインカテゴリの名称とサブカテゴリの名称を追加したデータを扱うためのVo
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class NewsWithCategoryNameVo {
 	

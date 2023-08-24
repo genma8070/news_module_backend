@@ -12,6 +12,7 @@ import com.example.news_module.entity.SubCategory;
 @Repository
 public interface SubCategoryDao extends JpaRepository<SubCategory, Integer>{
 	
+//	メインカテゴリのIDによる全てのサブカテゴリを取得する
 	@Query(value ="select * from sub_categorys where father = ?1",nativeQuery =true)
 	public List<Map<String, Object>> findAllSubByFather(Integer father);
 

@@ -17,6 +17,8 @@ public class SubCategoryServiceImpl implements SubCategoryService {
 
 	@Autowired
 	private SubCategoryDao subCategoryDao;
+	
+//	全てのサブカテゴリを取得する
 	@Override
 	public SubCategoryResponse findSubCategory(SubCategoryRequest req) {
 

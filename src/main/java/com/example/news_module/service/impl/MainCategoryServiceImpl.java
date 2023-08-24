@@ -17,6 +17,7 @@ public class MainCategoryServiceImpl implements MainCategoryService {
 	@Autowired
 	private MainCategoryDao mainCategoryDao;
 	
+//	全てのメインカテゴリを取得する
 	@Override
 	public MainCategoryResponse findMainCategory() {
 
@@ -24,6 +25,7 @@ public class MainCategoryServiceImpl implements MainCategoryService {
 
 		List<Map<String, Object>> res = mainCategoryDao.findAllMain();
 
+		
 		for (Map<String, Object> map : res) {
 			MainCategoryResponse e = new MainCategoryResponse();
 			for (String item : map.keySet()) {
