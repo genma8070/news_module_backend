@@ -1,6 +1,6 @@
 package com.example.news_module.entity;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,20 +27,26 @@ public class News {
 	@Column(name = "title")
 	private String title;
 	
+	@Column(name = "sub_title")
+	private String subTitle;
+	
 	@Column(name = "text")
 	private String text;
 	
 	@Column(name = "open")
 	private Boolean open;
 	
+	
 	@Column(name = "creat_date")
-	private LocalDate creatDate;
+	private LocalDateTime creatDate;
+	
 	
 	@Column(name = "updata_date")
-	private LocalDate updataDate;
+	private LocalDateTime updataDate;
+	
 	
 	@Column(name = "open_date")
-	private LocalDate openDate;
+	private LocalDateTime openDate;
 
 	public Integer getNewsId() {
 		return newsId;
@@ -90,24 +96,32 @@ public class News {
 		this.open = open;
 	}
 
-	public LocalDate getCreatDate() {
+	public LocalDateTime getCreatDate() {
 		return creatDate;
 	}
 
-	public void setCreatDate(LocalDate creatDate) {
+	public void setCreatDate(LocalDateTime creatDate) {
 		this.creatDate = creatDate;
 	}
 
-	public LocalDate getUpdataDate() {
+	public LocalDateTime getUpdataDate() {
 		return updataDate;
 	}
 
-	public void setUpdataDate(LocalDate updataDate) {
+	public void setUpdataDate(LocalDateTime updataDate) {
 		this.updataDate = updataDate;
 	}
 
+	public LocalDateTime getOpenDate() {
+		return openDate;
+	}
+
+	public void setOpenDate(LocalDateTime openDate) {
+		this.openDate = openDate;
+	}
+
 	public News(Integer newsId, Integer mainCategory, Integer subCategory, String title, String text, Boolean open,
-			LocalDate creatDate, LocalDate updataDate) {
+			LocalDateTime creatDate, LocalDateTime updataDate, LocalDateTime openDate) {
 		super();
 		this.newsId = newsId;
 		this.mainCategory = mainCategory;
@@ -117,6 +131,19 @@ public class News {
 		this.open = open;
 		this.creatDate = creatDate;
 		this.updataDate = updataDate;
+		this.openDate = openDate;
+	}
+
+	public News(Integer mainCategory, Integer subCategory, String title, String text, Boolean open,
+			LocalDateTime creatDate, LocalDateTime openDate) {
+		super();
+		this.mainCategory = mainCategory;
+		this.subCategory = subCategory;
+		this.title = title;
+		this.text = text;
+		this.open = open;
+		this.creatDate = creatDate;
+		this.openDate = openDate;
 	}
 
 	public News() {
@@ -124,49 +151,22 @@ public class News {
 		// TODO Auto-generated constructor stub
 	}
 
-	public News(Integer newsId, Boolean open) {
-		super();
-		this.newsId = newsId;
-		this.open = open;
+	public String getSubTitle() {
+		return subTitle;
 	}
 
-	public News(Integer mainCategory, Integer subCategory, String title, String text, Boolean open,
-			LocalDate creatDate) {
-		super();
-		this.mainCategory = mainCategory;
-		this.subCategory = subCategory;
-		this.title = title;
-		this.text = text;
-		this.open = open;
-		this.creatDate = creatDate;
+	public void setSubTitle(String subTitle) {
+		this.subTitle = subTitle;
 	}
 
-	public News(Integer newsId, Integer mainCategory, Integer subCategory, String title, String text,
-			LocalDate updataDate) {
+	public News(Integer newsId, Integer mainCategory, Integer subCategory, String title, String subTitle, String text,
+			Boolean open, LocalDateTime creatDate, LocalDateTime updataDate, LocalDateTime openDate) {
 		super();
 		this.newsId = newsId;
 		this.mainCategory = mainCategory;
 		this.subCategory = subCategory;
 		this.title = title;
-		this.text = text;
-		this.updataDate = updataDate;
-	}
-
-	public LocalDate getOpenDate() {
-		return openDate;
-	}
-
-	public void setOpenDate(LocalDate openDate) {
-		this.openDate = openDate;
-	}
-
-	public News(Integer newsId, Integer mainCategory, Integer subCategory, String title, String text, Boolean open,
-			LocalDate creatDate, LocalDate updataDate, LocalDate openDate) {
-		super();
-		this.newsId = newsId;
-		this.mainCategory = mainCategory;
-		this.subCategory = subCategory;
-		this.title = title;
+		this.subTitle = subTitle;
 		this.text = text;
 		this.open = open;
 		this.creatDate = creatDate;
@@ -175,5 +175,4 @@ public class News {
 	}
 
 	
-
 }

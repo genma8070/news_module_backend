@@ -1,12 +1,16 @@
 package com.example.news_module.vo.request;
 
+import java.util.List;
+
 public class SubCategoryRequest {
+	
+	private List<Integer> deleteList;
 
 	private Integer subId;
 
 	private String subTitle;
 
-	private Integer fatherId;
+	private Integer mainId;
 
 	public Integer getSubId() {
 		return subId;
@@ -24,12 +28,20 @@ public class SubCategoryRequest {
 		this.subTitle = subTitle;
 	}
 
-	public Integer getFatherId() {
-		return fatherId;
+	public Integer getMainId() {
+		return mainId;
 	}
 
-	public void setFatherId(Integer fatherId) {
-		this.fatherId = fatherId;
+	public void setMainId(Integer mainId) {
+		this.mainId = mainId;
+	}
+
+	public List<Integer> getDeleteList() {
+		return deleteList;
+	}
+
+	public void setDeleteList(List<Integer> deleteList) {
+		this.deleteList = deleteList;
 	}
 
 }

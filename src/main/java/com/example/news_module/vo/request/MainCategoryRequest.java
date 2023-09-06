@@ -1,7 +1,11 @@
 package com.example.news_module.vo.request;
 
-public class MainCategoryRequest {
+import java.util.List;
 
+public class MainCategoryRequest {
+	
+	private List<Integer> deleteList;
+	
 	private Integer mainId;
 
 	private String mainTitle;
@@ -20,6 +24,14 @@ public class MainCategoryRequest {
 
 	public void setMainTitle(String mainTitle) {
 		this.mainTitle = mainTitle;
+	}
+
+	public List<Integer> getDeleteList() {
+		return deleteList;
+	}
+
+	public void setDeleteList(List<Integer> deleteList) {
+		this.deleteList = deleteList;
 	}
 
 }

@@ -1,7 +1,7 @@
 package com.example.news_module.service.impl;
 
-import java.sql.Date;
-import java.time.LocalDate;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +30,8 @@ public class NewsServiceImpl implements NewsService {
 		String text = req.getText();
 		Integer mainCategory = req.getMainCategory();
 		Integer subCategory = req.getSubCategory();
+		LocalDateTime open = req.getOpenDate();
+		Boolean status = null;
 		if (title.isEmpty() || text.isEmpty()) {
 			return new NewsResponse("標題及內容都須填寫");
 		}
@@ -39,9 +41,16 @@ public class NewsServiceImpl implements NewsService {
 		if (subCategory == null) {
 			return new NewsResponse("請選擇子分類");
 		}
-		LocalDate now = LocalDate.now();
-		News news = new News(mainCategory, subCategory, title, text, true, now);
-		news.setOpenDate(now);
+
+		LocalDateTime now = LocalDateTime.now();
+		if (open == null) {
+			open = now;
+			status = true;
+		}else {
+			status = false;
+		}
+		
+		News news = new News(mainCategory, subCategory, title, text, status, now, open);
 		newsDao.save(news);
 		return new NewsResponse("新增成功");
 
@@ -64,7 +73,7 @@ public class NewsServiceImpl implements NewsService {
 			return new NewsResponse("請選擇子分類");
 		}
 		Optional<News> news = newsDao.findById(req.getNewsId());
-		LocalDate now = LocalDate.now();
+		LocalDateTime now = LocalDateTime.now();
 		News target = news.get();
 		target.setMainCategory(mainCategory);
 		target.setSubCategory(subCategory);
@@ -79,118 +88,53 @@ public class NewsServiceImpl implements NewsService {
 
 //	ニュースの公開状態を変更する
 	@Override
-	public NewsResponse changNewsStatus(NewsRequest req) {
-		Optional<News> news = newsDao.findById(req.getNewsId());
-		News target = news.get();
-		target.setOpen(!target.getOpen());
-		newsDao.save(target);
-		return new NewsResponse("更變開放狀態成功");
+	public NewsResponse hideNews(NewsRequest req) {
 
-	}
-
-//	選択したページの検索条件と一致するニュースを取得する（ユーザー側）
-	@Override
-	public NewsWithCategoryNameVo searchNewsF(NewsRequest req) {
-		String title = req.getTitle();
-		LocalDate startTime = req.getStartDate();
-		LocalDate endTime = req.getEndDate();
-		Integer index = req.getIndex();
-		Integer main = req.getMainCategory();
-		Integer sub = req.getSubCategory();
-		if (startTime != null && endTime != null && startTime.compareTo(endTime) > 0) {
-			return new NewsWithCategoryNameVo("結束時間不可早於開始時間");
-		}
-
-		List<NewsWithCategoryNameVo> eList = new ArrayList<NewsWithCategoryNameVo>();
-
-		List<Map<String, Object>> res = newsDao.findNewsByTitleOrCategoryOrDatePagingF(title, main, sub, startTime,
-				endTime, index);
-
-		for (Map<String, Object> map : res) {
-			NewsWithCategoryNameVo e = new NewsWithCategoryNameVo();
-			for (String item : map.keySet()) {
-				switch (item) {
-				case "news_id":
-					e.setNewsId((Integer) map.get(item));
-					break;
-				case "main_category":
-					e.setMainCategory((Integer) map.get(item));
-					break;
-				case "sub_category":
-					e.setSubCategory((Integer) map.get(item));
-					break;
-				case "main_title":
-					e.setMainCategoryName((String) map.get(item));
-					break;
-				case "sub_title":
-					e.setSubCategoryName((String) map.get(item));
-					break;
-				case "title":
-					e.setTitle((String) map.get(item));
-					break;
-				case "text":
-					e.setText((String) map.get(item));
-					break;
-				case "creat_date":
-					e.setCreatDate(((Date) map.get(item)).toLocalDate());
-					break;
-				case "updata_date":
-					if (map.get(item) != null) {
-						e.setUpdataDate(((Date) map.get(item)).toLocalDate());
-						break;
-					} else {
-						e.setUpdataDate(null);
-						break;
-					}
-				case "open_date":
-					if (map.get(item) != null) {
-						e.setOpenDate(((Date) map.get(item)).toLocalDate());
-						break;
-					} else {
-						e.setOpenDate(null);
-						break;
-					}
-				case "open":
-					Object value = map.get(item);
-					int intValue = Integer.parseInt(value.toString());
-					if (intValue == 0) {
-						e.setOpen(false);
-					} else {
-						e.setOpen(true);
-					}
-					break;
-				}
+		List<Integer> targets = req.getList();
+		LocalDateTime now = LocalDateTime.now();
+		for (Integer target : targets) {
+			Optional<News> news = newsDao.findById(target);
+			News n = news.get();
+			if (!n.getOpen()) {
+				continue;
+			} else {
+				n.setOpen(false);
+				n.setUpdataDate(now);
+				newsDao.save(n);
 			}
-			eList.add(e);
 		}
-		if (eList.size() == 0) {
-			return new NewsWithCategoryNameVo("查無資料");
-		}
-		return new NewsWithCategoryNameVo(eList);
+		return new NewsResponse("隱藏成功");
 
 	}
-
-//	検索条件と一致するニュースを取得する（ユーザー側）
-//	検索条件と一致するニュースを取得する
+	
 	@Override
-	public NewsWithCategoryNameVo searchNewsAllF(NewsRequest req) {
-//		不輸入則搜尋全部所以不用設定防空白
-		String title = req.getTitle();
-		LocalDate startTime = req.getStartDate();
-		LocalDate endTime = req.getEndDate();
-		Integer main = req.getMainCategory();
-		Integer sub = req.getSubCategory();
-		if (startTime != null && endTime != null && startTime.compareTo(endTime) > 0) {
-			return new NewsWithCategoryNameVo("結束時間不可早於開始時間");
+	public NewsResponse openNews(NewsRequest req) {
+
+		List<Integer> targets = req.getList();
+		LocalDateTime now = LocalDateTime.now();
+		for (Integer target : targets) {
+			Optional<News> news = newsDao.findById(target);
+			News n = news.get();
+			if (n.getOpen()) {
+				continue;
+			} else {
+				n.setOpen(true);
+				n.setUpdataDate(now);
+				n.setOpenDate(now);
+				newsDao.save(n);
+			}
 		}
+		return new NewsResponse("公開成功");
 
-		List<NewsWithCategoryNameVo> eList = new ArrayList<NewsWithCategoryNameVo>();
-
-		List<Map<String, Object>> res = newsDao.findNewsByTitleOrCategoryOrDateF(title, main, sub, startTime, endTime);
-
+	}
+	
+	public NewsWithCategoryNameVo findFullNewsById(NewsRequest req) {
+		Integer id = req.getNewsId();
+		List<Map<String, Object>> res = newsDao.findFullNewsById(id);
+		NewsWithCategoryNameVo e = new NewsWithCategoryNameVo();
 //		將找出的問卷物件重組
 		for (Map<String, Object> map : res) {
-			NewsWithCategoryNameVo e = new NewsWithCategoryNameVo();
+			
 			for (String item : map.keySet()) {
 				switch (item) {
 				case "news_id":
@@ -215,11 +159,11 @@ public class NewsServiceImpl implements NewsService {
 					e.setText((String) map.get(item));
 					break;
 				case "creat_date":
-					e.setCreatDate(((Date) map.get(item)).toLocalDate());
+					e.setCreatDate(((Timestamp) map.get(item)).toLocalDateTime());
 					break;
 				case "updata_date":
 					if (map.get(item) != null) {
-						e.setUpdataDate(((Date) map.get(item)).toLocalDate());
+						e.setUpdataDate(((Timestamp) map.get(item)).toLocalDateTime());
 						break;
 					} else {
 						e.setUpdataDate(null);
@@ -227,7 +171,7 @@ public class NewsServiceImpl implements NewsService {
 					}
 				case "open_date":
 					if (map.get(item) != null) {
-						e.setOpenDate(((Date) map.get(item)).toLocalDate());
+						e.setOpenDate(((Timestamp) map.get(item)).toLocalDateTime());
 						break;
 					} else {
 						e.setOpenDate(null);
@@ -244,14 +188,16 @@ public class NewsServiceImpl implements NewsService {
 					break;
 				}
 			}
-			eList.add(e);
+			
 		}
-		if (eList.size() == 0) {
-			return new NewsWithCategoryNameVo("查無資料");
-		}
-		return new NewsWithCategoryNameVo(eList);
+		
+		return e;
+
 	}
 
+	
+	
+	
 //	選択したページのニュースを取得する（ユーザー側）
 	@Override
 	public NewsWithCategoryNameVo findAllNewsF(NewsRequest newReq) {
@@ -289,11 +235,11 @@ public class NewsServiceImpl implements NewsService {
 					e.setText((String) map.get(item));
 					break;
 				case "creat_date":
-					e.setCreatDate(((Date) map.get(item)).toLocalDate());
+					e.setCreatDate(((Timestamp) map.get(item)).toLocalDateTime());
 					break;
 				case "updata_date":
 					if (map.get(item) != null) {
-						e.setUpdataDate(((Date) map.get(item)).toLocalDate());
+						e.setUpdataDate(((Timestamp) map.get(item)).toLocalDateTime());
 						break;
 					} else {
 						e.setUpdataDate(null);
@@ -301,7 +247,7 @@ public class NewsServiceImpl implements NewsService {
 					}
 				case "open_date":
 					if (map.get(item) != null) {
-						e.setOpenDate(((Date) map.get(item)).toLocalDate());
+						e.setOpenDate(((Timestamp) map.get(item)).toLocalDateTime());
 						break;
 					} else {
 						e.setOpenDate(null);
@@ -361,11 +307,11 @@ public class NewsServiceImpl implements NewsService {
 					e.setText((String) map.get(item));
 					break;
 				case "creat_date":
-					e.setCreatDate(((Date) map.get(item)).toLocalDate());
+					e.setCreatDate(((Timestamp) map.get(item)).toLocalDateTime());
 					break;
 				case "updata_date":
 					if (map.get(item) != null) {
-						e.setUpdataDate(((Date) map.get(item)).toLocalDate());
+						e.setUpdataDate(((Timestamp) map.get(item)).toLocalDateTime());
 						break;
 					} else {
 						e.setUpdataDate(null);
@@ -373,7 +319,7 @@ public class NewsServiceImpl implements NewsService {
 					}
 				case "open_date":
 					if (map.get(item) != null) {
-						e.setOpenDate(((Date) map.get(item)).toLocalDate());
+						e.setOpenDate(((Timestamp) map.get(item)).toLocalDateTime());
 						break;
 					} else {
 						e.setOpenDate(null);
@@ -394,7 +340,167 @@ public class NewsServiceImpl implements NewsService {
 //			ニュースが公開中なら公開時間が一週間超えたかどうかを判断する
 			if (e.getOpen()) {
 //				公開時間が七日超えたら公開状態を非公開にする
-				e.setOpen(e.getOpenDate().plusDays(7).compareTo(LocalDate.now()) < 0 ? false : true);
+				e.setOpen(e.getOpenDate().plusDays(7).compareTo(LocalDateTime.now()) < 0 ? false : true);
+//				公開状態が非公開になった場合はデータベースを更新する
+				if (!e.getOpen()) {
+					Optional<News> target = newsDao.findById(e.getNewsId());
+					News news = target.get();
+					news.setOpen(e.getOpen());
+					newsDao.save(news);
+				}
+			}
+			eList.add(e);
+		}
+		if (eList.size() == 0) {
+			return new NewsWithCategoryNameVo("此頁無資料");
+		}
+		return new NewsWithCategoryNameVo(eList);
+
+	}
+	
+//	選択したページのニュースを取得する（ユーザー側）
+	@Override
+	public NewsWithCategoryNameVo findAllNewsFAsc(NewsRequest newReq) {
+
+		List<NewsWithCategoryNameVo> eList = new ArrayList<NewsWithCategoryNameVo>();
+
+//		輸入INDEX找尋該頁號的問卷
+		Integer index = newReq.getIndex();
+		List<Map<String, Object>> res = newsDao.findAllNewsPagingFAsc(index);
+
+//		將找出的問卷物件重組
+		for (Map<String, Object> map : res) {
+			NewsWithCategoryNameVo e = new NewsWithCategoryNameVo();
+			for (String item : map.keySet()) {
+				switch (item) {
+				case "news_id":
+					e.setNewsId((Integer) map.get(item));
+					break;
+				case "main_category":
+					e.setMainCategory((Integer) map.get(item));
+					break;
+				case "sub_category":
+					e.setSubCategory((Integer) map.get(item));
+					break;
+				case "main_title":
+					e.setMainCategoryName((String) map.get(item));
+					break;
+				case "sub_title":
+					e.setSubCategoryName((String) map.get(item));
+					break;
+				case "title":
+					e.setTitle((String) map.get(item));
+					break;
+				case "text":
+					e.setText((String) map.get(item));
+					break;
+				case "creat_date":
+					e.setCreatDate(((Timestamp) map.get(item)).toLocalDateTime());
+					break;
+				case "updata_date":
+					if (map.get(item) != null) {
+						e.setUpdataDate(((Timestamp) map.get(item)).toLocalDateTime());
+						break;
+					} else {
+						e.setUpdataDate(null);
+						break;
+					}
+				case "open_date":
+					if (map.get(item) != null) {
+						e.setOpenDate(((Timestamp) map.get(item)).toLocalDateTime());
+						break;
+					} else {
+						e.setOpenDate(null);
+						break;
+					}
+				case "open":
+					Object value = map.get(item);
+					int intValue = Integer.parseInt(value.toString());
+					if (intValue == 0) {
+						e.setOpen(false);
+					} else {
+						e.setOpen(true);
+					}
+					break;
+				}
+			}
+			eList.add(e);
+		}
+		if (eList.size() == 0) {
+			return new NewsWithCategoryNameVo("此頁無資料");
+		}
+		return new NewsWithCategoryNameVo(eList);
+
+	}
+
+//	全てのニュースを取得する（ユーザー側）
+	@Override
+	public NewsWithCategoryNameVo findAllFAsc() {
+
+		List<NewsWithCategoryNameVo> eList = new ArrayList<NewsWithCategoryNameVo>();
+
+		List<Map<String, Object>> res = newsDao.findAllNewsFAsc();
+
+		for (Map<String, Object> map : res) {
+			NewsWithCategoryNameVo e = new NewsWithCategoryNameVo();
+			for (String item : map.keySet()) {
+				switch (item) {
+				case "news_id":
+					e.setNewsId((Integer) map.get(item));
+					break;
+				case "main_category":
+					e.setMainCategory((Integer) map.get(item));
+					break;
+				case "sub_category":
+					e.setSubCategory((Integer) map.get(item));
+					break;
+				case "main_title":
+					e.setMainCategoryName((String) map.get(item));
+					break;
+				case "sub_title":
+					e.setSubCategoryName((String) map.get(item));
+					break;
+				case "title":
+					e.setTitle((String) map.get(item));
+					break;
+				case "text":
+					e.setText((String) map.get(item));
+					break;
+				case "creat_date":
+					e.setCreatDate(((Timestamp) map.get(item)).toLocalDateTime());
+					break;
+				case "updata_date":
+					if (map.get(item) != null) {
+						e.setUpdataDate(((Timestamp) map.get(item)).toLocalDateTime());
+						break;
+					} else {
+						e.setUpdataDate(null);
+						break;
+					}
+				case "open_date":
+					if (map.get(item) != null) {
+						e.setOpenDate(((Timestamp) map.get(item)).toLocalDateTime());
+						break;
+					} else {
+						e.setOpenDate(null);
+						break;
+					}
+				case "open":
+					Object value = map.get(item);
+					int intValue = Integer.parseInt(value.toString());
+					if (intValue == 0) {
+						e.setOpen(false);
+					} else {
+						e.setOpen(true);
+					}
+					break;
+				}
+			}
+
+//			ニュースが公開中なら公開時間が一週間超えたかどうかを判断する
+			if (e.getOpen()) {
+//				公開時間が七日超えたら公開状態を非公開にする
+				e.setOpen(e.getOpenDate().plusDays(7).compareTo(LocalDateTime.now()) < 0 ? false : true);
 //				公開状態が非公開になった場合はデータベースを更新する
 				if (!e.getOpen()) {
 					Optional<News> target = newsDao.findById(e.getNewsId());
@@ -417,8 +523,8 @@ public class NewsServiceImpl implements NewsService {
 	public NewsWithCategoryNameVo searchNewsB(NewsRequest req) {
 //		不輸入則搜尋全部所以不用設定防空白
 		String title = req.getTitle();
-		LocalDate startTime = req.getStartDate();
-		LocalDate endTime = req.getEndDate();
+		LocalDateTime startTime = req.getStartDate();
+		LocalDateTime endTime = req.getEndDate();
 		Integer index = req.getIndex();
 		Integer main = req.getMainCategory();
 		Integer sub = req.getSubCategory();
@@ -458,11 +564,11 @@ public class NewsServiceImpl implements NewsService {
 					e.setText((String) map.get(item));
 					break;
 				case "creat_date":
-					e.setCreatDate(((Date) map.get(item)).toLocalDate());
+					e.setCreatDate(((Timestamp) map.get(item)).toLocalDateTime());
 					break;
 				case "updata_date":
 					if (map.get(item) != null) {
-						e.setUpdataDate(((Date) map.get(item)).toLocalDate());
+						e.setUpdataDate(((Timestamp) map.get(item)).toLocalDateTime());
 						break;
 					} else {
 						e.setUpdataDate(null);
@@ -470,7 +576,7 @@ public class NewsServiceImpl implements NewsService {
 					}
 				case "open_date":
 					if (map.get(item) != null) {
-						e.setOpenDate(((Date) map.get(item)).toLocalDate());
+						e.setOpenDate(((Timestamp) map.get(item)).toLocalDateTime());
 						break;
 					} else {
 						e.setOpenDate(null);
@@ -501,8 +607,8 @@ public class NewsServiceImpl implements NewsService {
 	public NewsWithCategoryNameVo searchNewsAllB(NewsRequest req) {
 //		不輸入則搜尋全部所以不用設定防空白
 		String title = req.getTitle();
-		LocalDate startTime = req.getStartDate();
-		LocalDate endTime = req.getEndDate();
+		LocalDateTime startTime = req.getStartDate();
+		LocalDateTime endTime = req.getEndDate();
 		Integer main = req.getMainCategory();
 		Integer sub = req.getSubCategory();
 		if (startTime != null && endTime != null && startTime.compareTo(endTime) > 0) {
@@ -541,11 +647,11 @@ public class NewsServiceImpl implements NewsService {
 					e.setText((String) map.get(item));
 					break;
 				case "creat_date":
-					e.setCreatDate(((Date) map.get(item)).toLocalDate());
+					e.setCreatDate(((Timestamp) map.get(item)).toLocalDateTime());
 					break;
 				case "updata_date":
 					if (map.get(item) != null) {
-						e.setUpdataDate(((Date) map.get(item)).toLocalDate());
+						e.setUpdataDate(((Timestamp) map.get(item)).toLocalDateTime());
 						break;
 					} else {
 						e.setUpdataDate(null);
@@ -553,7 +659,7 @@ public class NewsServiceImpl implements NewsService {
 					}
 				case "open_date":
 					if (map.get(item) != null) {
-						e.setOpenDate(((Date) map.get(item)).toLocalDate());
+						e.setOpenDate(((Timestamp) map.get(item)).toLocalDateTime());
 						break;
 					} else {
 						e.setOpenDate(null);
@@ -616,11 +722,11 @@ public class NewsServiceImpl implements NewsService {
 					e.setText((String) map.get(item));
 					break;
 				case "creat_date":
-					e.setCreatDate(((Date) map.get(item)).toLocalDate());
+					e.setCreatDate(((Timestamp) map.get(item)).toLocalDateTime());
 					break;
 				case "updata_date":
 					if (map.get(item) != null) {
-						e.setUpdataDate(((Date) map.get(item)).toLocalDate());
+						e.setUpdataDate(((Timestamp) map.get(item)).toLocalDateTime());
 						break;
 					} else {
 						e.setUpdataDate(null);
@@ -628,7 +734,7 @@ public class NewsServiceImpl implements NewsService {
 					}
 				case "open_date":
 					if (map.get(item) != null) {
-						e.setOpenDate(((Date) map.get(item)).toLocalDate());
+						e.setOpenDate(((Timestamp) map.get(item)).toLocalDateTime());
 						break;
 					} else {
 						e.setOpenDate(null);
@@ -688,11 +794,11 @@ public class NewsServiceImpl implements NewsService {
 					e.setText((String) map.get(item));
 					break;
 				case "creat_date":
-					e.setCreatDate(((Date) map.get(item)).toLocalDate());
+					e.setCreatDate(((Timestamp) map.get(item)).toLocalDateTime());
 					break;
 				case "updata_date":
 					if (map.get(item) != null) {
-						e.setUpdataDate(((Date) map.get(item)).toLocalDate());
+						e.setUpdataDate(((Timestamp) map.get(item)).toLocalDateTime());
 						break;
 					} else {
 						e.setUpdataDate(null);
@@ -700,7 +806,7 @@ public class NewsServiceImpl implements NewsService {
 					}
 				case "open_date":
 					if (map.get(item) != null) {
-						e.setOpenDate(((Date) map.get(item)).toLocalDate());
+						e.setOpenDate(((Timestamp) map.get(item)).toLocalDateTime());
 						break;
 					} else {
 						e.setOpenDate(null);
@@ -720,7 +826,7 @@ public class NewsServiceImpl implements NewsService {
 //			ニュースが公開中なら公開時間が一週間超えたかどうかを判断する
 			if (e.getOpen()) {
 //				公開時間が七日超えたら公開状態を非公開にする
-				e.setOpen(e.getOpenDate().plusDays(7).compareTo(LocalDate.now()) < 0 ? false : true);
+				e.setOpen(e.getOpenDate().plusDays(7).compareTo(LocalDateTime.now()) < 0 ? false : true);
 //				公開状態が非公開になった場合はデータベースを更新する
 				if (!e.getOpen()) {
 					Optional<News> target = newsDao.findById(e.getNewsId());

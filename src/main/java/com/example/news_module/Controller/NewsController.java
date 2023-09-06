@@ -32,9 +32,14 @@ public class NewsController {
 	};
 	
 //	ニュースの公開状態を変更する
-	@PostMapping("/change_open")
-	public NewsResponse changNewsStatus(@RequestBody NewsRequest req) {
-		return newsService.changNewsStatus(req);
+	@PostMapping("/hide")
+	public NewsResponse hideNews(@RequestBody NewsRequest req) {
+		return newsService.hideNews(req);
+	};
+	
+	@PostMapping("/open")
+	public NewsResponse openNews(@RequestBody NewsRequest req) {
+		return newsService.openNews(req);
 	};
 	
 //	全てのニュースを取得する（ユーザー側）
@@ -48,17 +53,18 @@ public class NewsController {
 		return newsService.findAllNewsF(req);
 	};
 	
-//	選択したページの検索条件と一致するニュースを取得する（ユーザー側）
-	@PostMapping("/search_news_f")
-	public NewsWithCategoryNameVo searchNewsF(@RequestBody NewsRequest req) {
-		return newsService.searchNewsF(req);
+//	全てのニュースを取得する（ユーザー側）
+	@GetMapping("/get_all_f_a")
+	public NewsWithCategoryNameVo findAllFAsc() {
+		return newsService.findAllFAsc();
+	};
+//	選択したページのニュースを取得する（ユーザー側）
+	@PostMapping("/find_all_news_f_a")
+	public NewsWithCategoryNameVo findAllNewsFAsc(@RequestBody NewsRequest req) {
+		return newsService.findAllNewsFAsc(req);
 	};
 	
-//	検索条件と一致するニュースを取得する（ユーザー側）
-	@PostMapping("/search_news_f_A")
-	public NewsWithCategoryNameVo searchNewsAllF(@RequestBody NewsRequest req) {
-		return newsService.searchNewsAllF(req);
-	};
+
 	
 //	全てのニュースを取得する（管理者側）
 	@GetMapping("/get_all_b")
@@ -89,5 +95,10 @@ public class NewsController {
 	public NewsResponse findNewsById(@RequestBody NewsRequest req) {
 		return newsService.findNewsById(req);
 	};
-
+	
+	@PostMapping("/find_full_news_by_id")
+	public NewsWithCategoryNameVo findFullNewsById(@RequestBody NewsRequest req) {
+		return newsService.findFullNewsById(req);
+	};
+	
 }

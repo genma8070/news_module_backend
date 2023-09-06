@@ -2,6 +2,8 @@ package com.example.news_module.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -10,14 +12,15 @@ import javax.persistence.Table;
 public class SubCategory {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Integer subId;
 	
 	@Column(name = "sub_title")
 	private String subTitle;
 	
-	@Column(name = "father")
-	private Integer fatherId;
+	@Column(name = "main_id")
+	private Integer mainId;
 
 	public Integer getSubId() {
 		return subId;
@@ -35,23 +38,35 @@ public class SubCategory {
 		this.subTitle = subTitle;
 	}
 
-	public Integer getFatherId() {
-		return fatherId;
+	public Integer getMainId() {
+		return mainId;
 	}
 
-	public void setFatherId(Integer fatherId) {
-		this.fatherId = fatherId;
+	public void setMainId(Integer mainId) {
+		this.mainId = mainId;
 	}
 
-	public SubCategory(Integer subId, String subTitle, Integer fatherId) {
+	public SubCategory(Integer subId, String subTitle, Integer mainId) {
 		super();
 		this.subId = subId;
 		this.subTitle = subTitle;
-		this.fatherId = fatherId;
+		this.mainId = mainId;
 	}
 
 	public SubCategory() {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+
+	public SubCategory(String subTitle, Integer mainId) {
+		super();
+		this.subTitle = subTitle;
+		this.mainId = mainId;
+	}
+
+	public SubCategory(Integer subId, String subTitle) {
+		super();
+		this.subId = subId;
+		this.subTitle = subTitle;
 	}
 }

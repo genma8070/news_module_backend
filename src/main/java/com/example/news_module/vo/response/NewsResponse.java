@@ -1,6 +1,6 @@
 package com.example.news_module.vo.response;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.example.news_module.entity.News;
@@ -25,11 +25,14 @@ public class NewsResponse {
 	
 	private Boolean open;
 	
-	private LocalDate creatDate;
 	
-	private LocalDate updataDate;
+	private LocalDateTime creatDate;
 	
-	private LocalDate openDate;
+	
+	private LocalDateTime updataDate;
+	
+	
+	private LocalDateTime openDate;
 	
 	private String message;
 
@@ -89,19 +92,19 @@ public class NewsResponse {
 		this.open = open;
 	}
 
-	public LocalDate getCreatDate() {
+	public LocalDateTime getCreatDate() {
 		return creatDate;
 	}
 
-	public void setCreatDate(LocalDate creatDate) {
+	public void setCreatDate(LocalDateTime creatDate) {
 		this.creatDate = creatDate;
 	}
 
-	public LocalDate getUpdataDate() {
+	public LocalDateTime getUpdataDate() {
 		return updataDate;
 	}
 
-	public void setUpdataDate(LocalDate updataDate) {
+	public void setUpdataDate(LocalDateTime updataDate) {
 		this.updataDate = updataDate;
 	}
 
@@ -114,7 +117,7 @@ public class NewsResponse {
 	}
 
 	public NewsResponse(List<NewsResponse> list, Integer newsId, Integer mainCategory, Integer subCategory, String title,
-			String text, Boolean open, LocalDate creatDate, LocalDate updataDate, String message) {
+			String text, Boolean open, LocalDateTime creatDate, LocalDateTime updataDate, String message) {
 		super();
 		this.list = list;
 		this.newsId = newsId;
@@ -144,7 +147,7 @@ public class NewsResponse {
 	}
 
 	public NewsResponse(Integer newsId, Integer mainCategory, Integer subCategory, String title, String text,
-			Boolean open, LocalDate creatDate, LocalDate updataDate) {
+			Boolean open, LocalDateTime creatDate, LocalDateTime updataDate) {
 		super();
 		this.newsId = newsId;
 		this.mainCategory = mainCategory;
@@ -169,16 +172,16 @@ public class NewsResponse {
 		this.news = news;
 	}
 
-	public LocalDate getOpenDate() {
+	public LocalDateTime getOpenDate() {
 		return openDate;
 	}
 
-	public void setOpenDate(LocalDate openDate) {
+	public void setOpenDate(LocalDateTime openDate) {
 		this.openDate = openDate;
 	}
 
 	public NewsResponse(List<NewsResponse> list, News news, Integer newsId, Integer mainCategory, Integer subCategory,
-			String title, String text, Boolean open, LocalDate creatDate, LocalDate updataDate, LocalDate openDate,
+			String title, String text, Boolean open, LocalDateTime creatDate, LocalDateTime updataDate, LocalDateTime openDate,
 			String message) {
 		super();
 		this.list = list;
@@ -196,7 +199,7 @@ public class NewsResponse {
 	}
 
 	public NewsResponse(List<NewsResponse> list, News news, Integer newsId, Integer mainCategory, Integer subCategory,
-			String title, String text, Boolean open, LocalDate creatDate, LocalDate updataDate, LocalDate openDate) {
+			String title, String text, Boolean open, LocalDateTime creatDate, LocalDateTime updataDate, LocalDateTime openDate) {
 		super();
 		this.list = list;
 		this.news = news;

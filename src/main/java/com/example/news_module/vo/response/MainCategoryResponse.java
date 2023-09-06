@@ -12,7 +12,12 @@ public class MainCategoryResponse {
 	
 	private String message;
 	
+	private Integer news;
+	
+	private MainCategory main;
+	
 	private List<MainCategory> list;
+	
 	private List<MainCategoryResponse> list2;
 	
 
@@ -85,6 +90,34 @@ public class MainCategoryResponse {
 	public MainCategoryResponse(List<MainCategoryResponse> list2) {
 		super();
 		this.list2 = list2;
+	}
+
+	public Integer getNews() {
+		return news;
+	}
+
+	public void setNews(Integer news) {
+		this.news = news;
+	}
+
+	public MainCategoryResponse(Integer mainId, String mainTitle, Integer news) {
+		super();
+		this.mainId = mainId;
+		this.mainTitle = mainTitle;
+		this.news = news;
+	}
+
+	public MainCategory getMain() {
+		return main;
+	}
+
+	public void setMain(MainCategory main) {
+		this.main = main;
+	}
+
+	public MainCategoryResponse(MainCategory main) {
+		super();
+		this.main = main;
 	}
 
 }

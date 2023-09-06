@@ -2,17 +2,26 @@ package com.example.news_module.vo.response;
 
 import java.util.List;
 
+import com.example.news_module.entity.SubCategory;
+
 public class SubCategoryResponse {
 
 	private Integer subId;
 
 	private String subTitle;
 
-	private Integer fatherId;
+	private Integer mainId;
+	
+	private Integer news;
 
 	private String message;
 	
 	private List<SubCategoryResponse> list;
+	
+	private List<SubCategory> subList;
+	
+	private SubCategory sub;
+	
 	public Integer getSubId() {
 		return subId;
 	}
@@ -29,12 +38,12 @@ public class SubCategoryResponse {
 		this.subTitle = subTitle;
 	}
 
-	public Integer getFatherId() {
-		return fatherId;
+	public Integer getMainId() {
+		return mainId;
 	}
 
-	public void setFatherId(Integer fatherId) {
-		this.fatherId = fatherId;
+	public void setMainId(Integer mainId) {
+		this.mainId = mainId;
 	}
 
 	public SubCategoryResponse() {
@@ -42,11 +51,11 @@ public class SubCategoryResponse {
 		// TODO Auto-generated constructor stub
 	}
 
-	public SubCategoryResponse(Integer subId, String subTitle, Integer fatherId) {
+	public SubCategoryResponse(Integer subId, String subTitle, Integer mainId) {
 		super();
 		this.subId = subId;
 		this.subTitle = subTitle;
-		this.fatherId = fatherId;
+		this.mainId = mainId;
 	}
 
 	public List<SubCategoryResponse> getList() {
@@ -73,6 +82,49 @@ public class SubCategoryResponse {
 	public SubCategoryResponse(String message) {
 		super();
 		this.message = message;
+	}
+	
+	public List<SubCategory> getSubList() {
+		return subList;
+	}
+
+	public void setSubList(List<SubCategory> subList) {
+		this.subList = subList;
+	}
+
+	public SubCategoryResponse(String message, List<SubCategory> subList) {
+		super();
+		this.message = message;
+		this.subList = subList;
+	}
+
+	public Integer getNews() {
+		return news;
+	}
+
+	public void setNews(Integer news) {
+		this.news = news;
+	}
+
+	public SubCategoryResponse(Integer subId, String subTitle, Integer mainId, Integer news) {
+		super();
+		this.subId = subId;
+		this.subTitle = subTitle;
+		this.mainId = mainId;
+		this.news = news;
+	}
+
+	public SubCategory getSub() {
+		return sub;
+	}
+
+	public void setSub(SubCategory sub) {
+		this.sub = sub;
+	}
+
+	public SubCategoryResponse(SubCategory sub) {
+		super();
+		this.sub = sub;
 	}
 
 }

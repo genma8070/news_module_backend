@@ -1,6 +1,6 @@
 package com.example.news_module.vo.response;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -27,11 +27,14 @@ public class NewsWithCategoryNameVo {
 	
 	private Boolean open;
 	
-	private LocalDate creatDate;
 	
-	private LocalDate updataDate;
+	private LocalDateTime creatDate;
+	
+	
+	private LocalDateTime updataDate;
 
-	private LocalDate openDate;
+	
+	private LocalDateTime openDate;
 	
 	private String message;
 
@@ -107,19 +110,19 @@ public class NewsWithCategoryNameVo {
 		this.open = open;
 	}
 
-	public LocalDate getCreatDate() {
+	public LocalDateTime getCreatDate() {
 		return creatDate;
 	}
 
-	public void setCreatDate(LocalDate creatDate) {
+	public void setCreatDate(LocalDateTime creatDate) {
 		this.creatDate = creatDate;
 	}
 
-	public LocalDate getUpdataDate() {
+	public LocalDateTime getUpdataDate() {
 		return updataDate;
 	}
 
-	public void setUpdataDate(LocalDate updataDate) {
+	public void setUpdataDate(LocalDateTime updataDate) {
 		this.updataDate = updataDate;
 	}
 
@@ -133,7 +136,7 @@ public class NewsWithCategoryNameVo {
 
 	public NewsWithCategoryNameVo(List<NewsWithCategoryNameVo> list, Integer newsId, Integer mainCategory,
 			Integer subCategory, String mainCategoryName, String subCategoryName, String title, String text,
-			Boolean open, LocalDate creatDate, LocalDate updataDate, String message) {
+			Boolean open, LocalDateTime creatDate, LocalDateTime updataDate, String message) {
 		super();
 		this.list = list;
 		this.newsId = newsId;
@@ -164,17 +167,17 @@ public class NewsWithCategoryNameVo {
 		this.list = list;
 	}
 
-	public LocalDate getOpenDate() {
+	public LocalDateTime getOpenDate() {
 		return openDate;
 	}
 
-	public void setOpenDate(LocalDate openDate) {
+	public void setOpenDate(LocalDateTime openDate) {
 		this.openDate = openDate;
 	}
 
 	public NewsWithCategoryNameVo(List<NewsWithCategoryNameVo> list, Integer newsId, Integer mainCategory,
 			Integer subCategory, String mainCategoryName, String subCategoryName, String title, String text,
-			Boolean open, LocalDate creatDate, LocalDate updataDate, LocalDate openDate) {
+			Boolean open, LocalDateTime creatDate, LocalDateTime updataDate, LocalDateTime openDate) {
 		super();
 		this.list = list;
 		this.newsId = newsId;

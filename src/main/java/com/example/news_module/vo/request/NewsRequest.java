@@ -1,8 +1,11 @@
 package com.example.news_module.vo.request;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
 public class NewsRequest {
+	
+	private List<Integer> list;
 
 	private Integer newsId;
 
@@ -16,15 +19,20 @@ public class NewsRequest {
 	
 	private Boolean open;
 	
-	private LocalDate creatDate;
 	
-	private LocalDate updataDate;
+	private LocalDateTime creatDate;
 	
-	private LocalDate startDate;
 	
-	private LocalDate endDate;
+	private LocalDateTime updataDate;
 	
-	private LocalDate openDate;
+	
+	private LocalDateTime startDate;
+	
+	
+	private LocalDateTime endDate;
+	
+	
+	private LocalDateTime openDate;
 	
 	private Integer index;
 
@@ -76,7 +84,45 @@ public class NewsRequest {
 		this.open = open;
 	}
 
-	
+	public LocalDateTime getCreatDate() {
+		return creatDate;
+	}
+
+	public void setCreatDate(LocalDateTime creatDate) {
+		this.creatDate = creatDate;
+	}
+
+	public LocalDateTime getUpdataDate() {
+		return updataDate;
+	}
+
+	public void setUpdataDate(LocalDateTime updataDate) {
+		this.updataDate = updataDate;
+	}
+
+	public LocalDateTime getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(LocalDateTime startDate) {
+		this.startDate = startDate;
+	}
+
+	public LocalDateTime getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(LocalDateTime endDate) {
+		this.endDate = endDate;
+	}
+
+	public LocalDateTime getOpenDate() {
+		return openDate;
+	}
+
+	public void setOpenDate(LocalDateTime openDate) {
+		this.openDate = openDate;
+	}
 
 	public Integer getIndex() {
 		return index;
@@ -86,44 +132,12 @@ public class NewsRequest {
 		this.index = index;
 	}
 
-	public LocalDate getCreatDate() {
-		return creatDate;
+	public List<Integer> getList() {
+		return list;
 	}
 
-	public void setCreatDate(LocalDate creatDate) {
-		this.creatDate = creatDate;
-	}
-
-	public LocalDate getUpdataDate() {
-		return updataDate;
-	}
-
-	public void setUpdataDate(LocalDate updataDate) {
-		this.updataDate = updataDate;
-	}
-
-	public LocalDate getStartDate() {
-		return startDate;
-	}
-
-	public void setStartDate(LocalDate startDate) {
-		this.startDate = startDate;
-	}
-
-	public LocalDate getEndDate() {
-		return endDate;
-	}
-
-	public void setEndDate(LocalDate endDate) {
-		this.endDate = endDate;
-	}
-
-	public LocalDate getOpenDate() {
-		return openDate;
-	}
-
-	public void setOpenDate(LocalDate openDate) {
-		this.openDate = openDate;
+	public void setList(List<Integer> list) {
+		this.list = list;
 	}
 
 	
