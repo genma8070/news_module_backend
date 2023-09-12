@@ -17,7 +17,7 @@ public interface SubCategoryDao extends JpaRepository<SubCategory, Integer> {
 	@Query(value = "select * from sub_categorys where main_id = ?1", nativeQuery = true)
 	public List<Map<String, Object>> findAllSubByFather(Integer father);
 
-	@Query(value = "select * from sub_categorys where sub_title = :inputTitle", nativeQuery = true)
+	@Query(value = "select * from sub_categorys where sub_category_name = :inputTitle", nativeQuery = true)
 	public List<Map<String, Object>> findByTitle(@Param("inputTitle") String Tilte);
 
 }

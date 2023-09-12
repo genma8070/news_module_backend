@@ -41,8 +41,8 @@ public class News {
 	private LocalDateTime creatDate;
 	
 	
-	@Column(name = "updata_date")
-	private LocalDateTime updataDate;
+	@Column(name = "update_date")
+	private LocalDateTime updateDate;
 	
 	
 	@Column(name = "open_date")
@@ -104,12 +104,12 @@ public class News {
 		this.creatDate = creatDate;
 	}
 
-	public LocalDateTime getUpdataDate() {
-		return updataDate;
+	public LocalDateTime getUpdateDate() {
+		return updateDate;
 	}
 
-	public void setUpdataDate(LocalDateTime updataDate) {
-		this.updataDate = updataDate;
+	public void setUpdateDate(LocalDateTime updateDate) {
+		this.updateDate = updateDate;
 	}
 
 	public LocalDateTime getOpenDate() {
@@ -121,7 +121,7 @@ public class News {
 	}
 
 	public News(Integer newsId, Integer mainCategory, Integer subCategory, String title, String text, Boolean open,
-			LocalDateTime creatDate, LocalDateTime updataDate, LocalDateTime openDate) {
+			LocalDateTime creatDate, LocalDateTime updateDate, LocalDateTime openDate) {
 		super();
 		this.newsId = newsId;
 		this.mainCategory = mainCategory;
@@ -130,7 +130,7 @@ public class News {
 		this.text = text;
 		this.open = open;
 		this.creatDate = creatDate;
-		this.updataDate = updataDate;
+		this.updateDate = updateDate;
 		this.openDate = openDate;
 	}
 
@@ -160,7 +160,7 @@ public class News {
 	}
 
 	public News(Integer newsId, Integer mainCategory, Integer subCategory, String title, String subTitle, String text,
-			Boolean open, LocalDateTime creatDate, LocalDateTime updataDate, LocalDateTime openDate) {
+			Boolean open, LocalDateTime creatDate, LocalDateTime updateDate, LocalDateTime openDate) {
 		super();
 		this.newsId = newsId;
 		this.mainCategory = mainCategory;
@@ -170,7 +170,34 @@ public class News {
 		this.text = text;
 		this.open = open;
 		this.creatDate = creatDate;
-		this.updataDate = updataDate;
+		this.updateDate = updateDate;
+		this.openDate = openDate;
+	}
+
+	public News(Integer mainCategory, Integer subCategory, String title, String subTitle, String text, Boolean open,
+			LocalDateTime creatDate, LocalDateTime updateDate, LocalDateTime openDate) {
+		super();
+		this.mainCategory = mainCategory;
+		this.subCategory = subCategory;
+		this.title = title;
+		this.subTitle = subTitle;
+		this.text = text;
+		this.open = open;
+		this.creatDate = creatDate;
+		this.updateDate = updateDate;
+		this.openDate = openDate;
+	}
+
+	public News(Integer mainCategory, Integer subCategory, String title, String subTitle, String text, Boolean open,
+			LocalDateTime creatDate, LocalDateTime openDate) {
+		super();
+		this.mainCategory = mainCategory;
+		this.subCategory = subCategory;
+		this.title = title;
+		this.subTitle = subTitle;
+		this.text = text;
+		this.open = open;
+		this.creatDate = creatDate;
 		this.openDate = openDate;
 	}
 

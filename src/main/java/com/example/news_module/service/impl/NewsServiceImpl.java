@@ -27,12 +27,13 @@ public class NewsServiceImpl implements NewsService {
 	@Override
 	public NewsResponse addNews(NewsRequest req) {
 		String title = req.getTitle();
+		String subTitle = req.getSubTitle();
 		String text = req.getText();
 		Integer mainCategory = req.getMainCategory();
 		Integer subCategory = req.getSubCategory();
 		LocalDateTime open = req.getOpenDate();
 		Boolean status = null;
-		if (title.isEmpty() || text.isEmpty()) {
+		if (title.isEmpty() || text.isEmpty() || subTitle.isEmpty()) {
 			return new NewsResponse("標題及內容都須填寫");
 		}
 		if (mainCategory == null) {
@@ -50,7 +51,7 @@ public class NewsServiceImpl implements NewsService {
 			status = false;
 		}
 		
-		News news = new News(mainCategory, subCategory, title, text, status, now, open);
+		News news = new News(mainCategory, subCategory, title, subTitle, text, status, now, open);
 		newsDao.save(news);
 		return new NewsResponse("新增成功");
 
@@ -58,12 +59,14 @@ public class NewsServiceImpl implements NewsService {
 
 //	ニュースを更新する
 	@Override
-	public NewsResponse updataNews(NewsRequest req) {
+	public NewsResponse updateNews(NewsRequest req) {
 		String title = req.getTitle();
+		String subTitle = req.getSubTitle();
 		String text = req.getText();
 		Integer mainCategory = req.getMainCategory();
 		Integer subCategory = req.getSubCategory();
-		if (title.isEmpty() || text.isEmpty()) {
+		LocalDateTime open =req.getOpenDate();
+		if (title.isEmpty() || text.isEmpty() || subTitle.isEmpty()) {
 			return new NewsResponse("標題及內容都須填寫");
 		}
 		if (mainCategory == null) {
@@ -78,9 +81,10 @@ public class NewsServiceImpl implements NewsService {
 		target.setMainCategory(mainCategory);
 		target.setSubCategory(subCategory);
 		target.setTitle(title);
+		target.setSubTitle(subTitle);
 		target.setText(text);
-		target.setUpdataDate(now);
-		target.setOpenDate(now);
+		target.setUpdateDate(now);
+		target.setOpenDate(open);
 		newsDao.save(target);
 		return new NewsResponse("更新成功");
 
@@ -99,7 +103,7 @@ public class NewsServiceImpl implements NewsService {
 				continue;
 			} else {
 				n.setOpen(false);
-				n.setUpdataDate(now);
+				n.setUpdateDate(now);
 				newsDao.save(n);
 			}
 		}
@@ -119,7 +123,7 @@ public class NewsServiceImpl implements NewsService {
 				continue;
 			} else {
 				n.setOpen(true);
-				n.setUpdataDate(now);
+				n.setUpdateDate(now);
 				n.setOpenDate(now);
 				newsDao.save(n);
 			}
@@ -128,6 +132,7 @@ public class NewsServiceImpl implements NewsService {
 
 	}
 	
+	@Override
 	public NewsWithCategoryNameVo findFullNewsById(NewsRequest req) {
 		Integer id = req.getNewsId();
 		List<Map<String, Object>> res = newsDao.findFullNewsById(id);
@@ -146,14 +151,17 @@ public class NewsServiceImpl implements NewsService {
 				case "sub_category":
 					e.setSubCategory((Integer) map.get(item));
 					break;
-				case "main_title":
+				case "main_category_name":
 					e.setMainCategoryName((String) map.get(item));
 					break;
-				case "sub_title":
+				case "sub_category_name":
 					e.setSubCategoryName((String) map.get(item));
 					break;
 				case "title":
 					e.setTitle((String) map.get(item));
+					break;
+				case "sub_title":
+					e.setSubTitle((String) map.get(item));
 					break;
 				case "text":
 					e.setText((String) map.get(item));
@@ -163,10 +171,10 @@ public class NewsServiceImpl implements NewsService {
 					break;
 				case "updata_date":
 					if (map.get(item) != null) {
-						e.setUpdataDate(((Timestamp) map.get(item)).toLocalDateTime());
+						e.setUpdateDate(((Timestamp) map.get(item)).toLocalDateTime());
 						break;
 					} else {
-						e.setUpdataDate(null);
+						e.setUpdateDate(null);
 						break;
 					}
 				case "open_date":
@@ -206,7 +214,8 @@ public class NewsServiceImpl implements NewsService {
 
 //		輸入INDEX找尋該頁號的問卷
 		Integer index = newReq.getIndex();
-		List<Map<String, Object>> res = newsDao.findAllNewsPagingF(index);
+		Integer items = newReq.getItems();
+		List<Map<String, Object>> res = newsDao.findAllNewsPagingF(index, items);
 
 //		將找出的問卷物件重組
 		for (Map<String, Object> map : res) {
@@ -222,14 +231,17 @@ public class NewsServiceImpl implements NewsService {
 				case "sub_category":
 					e.setSubCategory((Integer) map.get(item));
 					break;
-				case "main_title":
+				case "main_category_name":
 					e.setMainCategoryName((String) map.get(item));
 					break;
-				case "sub_title":
+				case "sub_category_name":
 					e.setSubCategoryName((String) map.get(item));
 					break;
 				case "title":
 					e.setTitle((String) map.get(item));
+					break;
+				case "sub_title":
+					e.setSubTitle((String) map.get(item));
 					break;
 				case "text":
 					e.setText((String) map.get(item));
@@ -239,10 +251,10 @@ public class NewsServiceImpl implements NewsService {
 					break;
 				case "updata_date":
 					if (map.get(item) != null) {
-						e.setUpdataDate(((Timestamp) map.get(item)).toLocalDateTime());
+						e.setUpdateDate(((Timestamp) map.get(item)).toLocalDateTime());
 						break;
 					} else {
-						e.setUpdataDate(null);
+						e.setUpdateDate(null);
 						break;
 					}
 				case "open_date":
@@ -294,14 +306,17 @@ public class NewsServiceImpl implements NewsService {
 				case "sub_category":
 					e.setSubCategory((Integer) map.get(item));
 					break;
-				case "main_title":
+				case "main_category_name":
 					e.setMainCategoryName((String) map.get(item));
 					break;
-				case "sub_title":
+				case "sub_category_name":
 					e.setSubCategoryName((String) map.get(item));
 					break;
 				case "title":
 					e.setTitle((String) map.get(item));
+					break;
+				case "sub_title":
+					e.setSubTitle((String) map.get(item));
 					break;
 				case "text":
 					e.setText((String) map.get(item));
@@ -311,10 +326,10 @@ public class NewsServiceImpl implements NewsService {
 					break;
 				case "updata_date":
 					if (map.get(item) != null) {
-						e.setUpdataDate(((Timestamp) map.get(item)).toLocalDateTime());
+						e.setUpdateDate(((Timestamp) map.get(item)).toLocalDateTime());
 						break;
 					} else {
-						e.setUpdataDate(null);
+						e.setUpdateDate(null);
 						break;
 					}
 				case "open_date":
@@ -366,7 +381,8 @@ public class NewsServiceImpl implements NewsService {
 
 //		輸入INDEX找尋該頁號的問卷
 		Integer index = newReq.getIndex();
-		List<Map<String, Object>> res = newsDao.findAllNewsPagingFAsc(index);
+		Integer items = newReq.getItems();
+		List<Map<String, Object>> res = newsDao.findAllNewsPagingBAsc(index, items);
 
 //		將找出的問卷物件重組
 		for (Map<String, Object> map : res) {
@@ -382,14 +398,17 @@ public class NewsServiceImpl implements NewsService {
 				case "sub_category":
 					e.setSubCategory((Integer) map.get(item));
 					break;
-				case "main_title":
+				case "main_category_name":
 					e.setMainCategoryName((String) map.get(item));
 					break;
-				case "sub_title":
+				case "sub_category_name":
 					e.setSubCategoryName((String) map.get(item));
 					break;
 				case "title":
 					e.setTitle((String) map.get(item));
+					break;
+				case "sub_title":
+					e.setSubTitle((String) map.get(item));
 					break;
 				case "text":
 					e.setText((String) map.get(item));
@@ -399,10 +418,10 @@ public class NewsServiceImpl implements NewsService {
 					break;
 				case "updata_date":
 					if (map.get(item) != null) {
-						e.setUpdataDate(((Timestamp) map.get(item)).toLocalDateTime());
+						e.setUpdateDate(((Timestamp) map.get(item)).toLocalDateTime());
 						break;
 					} else {
-						e.setUpdataDate(null);
+						e.setUpdateDate(null);
 						break;
 					}
 				case "open_date":
@@ -439,7 +458,7 @@ public class NewsServiceImpl implements NewsService {
 
 		List<NewsWithCategoryNameVo> eList = new ArrayList<NewsWithCategoryNameVo>();
 
-		List<Map<String, Object>> res = newsDao.findAllNewsFAsc();
+		List<Map<String, Object>> res = newsDao.findAllNewsBAsc();
 
 		for (Map<String, Object> map : res) {
 			NewsWithCategoryNameVo e = new NewsWithCategoryNameVo();
@@ -454,14 +473,17 @@ public class NewsServiceImpl implements NewsService {
 				case "sub_category":
 					e.setSubCategory((Integer) map.get(item));
 					break;
-				case "main_title":
+				case "main_category_name":
 					e.setMainCategoryName((String) map.get(item));
 					break;
-				case "sub_title":
+				case "sub_category_name":
 					e.setSubCategoryName((String) map.get(item));
 					break;
 				case "title":
 					e.setTitle((String) map.get(item));
+					break;
+				case "sub_title":
+					e.setSubTitle((String) map.get(item));
 					break;
 				case "text":
 					e.setText((String) map.get(item));
@@ -471,10 +493,10 @@ public class NewsServiceImpl implements NewsService {
 					break;
 				case "updata_date":
 					if (map.get(item) != null) {
-						e.setUpdataDate(((Timestamp) map.get(item)).toLocalDateTime());
+						e.setUpdateDate(((Timestamp) map.get(item)).toLocalDateTime());
 						break;
 					} else {
-						e.setUpdataDate(null);
+						e.setUpdateDate(null);
 						break;
 					}
 				case "open_date":
@@ -526,6 +548,7 @@ public class NewsServiceImpl implements NewsService {
 		LocalDateTime startTime = req.getStartDate();
 		LocalDateTime endTime = req.getEndDate();
 		Integer index = req.getIndex();
+		Integer items = req.getItems();
 		Integer main = req.getMainCategory();
 		Integer sub = req.getSubCategory();
 		if (startTime != null && endTime != null && startTime.compareTo(endTime) > 0) {
@@ -535,7 +558,7 @@ public class NewsServiceImpl implements NewsService {
 		List<NewsWithCategoryNameVo> eList = new ArrayList<NewsWithCategoryNameVo>();
 
 		List<Map<String, Object>> res = newsDao.findNewsByTitleOrCategoryOrDateB(title, main, sub, startTime, endTime,
-				index);
+				index, items);
 
 //		將找出的問卷物件重組
 		for (Map<String, Object> map : res) {
@@ -551,14 +574,17 @@ public class NewsServiceImpl implements NewsService {
 				case "sub_category":
 					e.setSubCategory((Integer) map.get(item));
 					break;
-				case "main_title":
+				case "main_category_name":
 					e.setMainCategoryName((String) map.get(item));
 					break;
-				case "sub_title":
+				case "sub_category_name":
 					e.setSubCategoryName((String) map.get(item));
 					break;
 				case "title":
 					e.setTitle((String) map.get(item));
+					break;
+				case "sub_title":
+					e.setSubTitle((String) map.get(item));
 					break;
 				case "text":
 					e.setText((String) map.get(item));
@@ -568,10 +594,10 @@ public class NewsServiceImpl implements NewsService {
 					break;
 				case "updata_date":
 					if (map.get(item) != null) {
-						e.setUpdataDate(((Timestamp) map.get(item)).toLocalDateTime());
+						e.setUpdateDate(((Timestamp) map.get(item)).toLocalDateTime());
 						break;
 					} else {
-						e.setUpdataDate(null);
+						e.setUpdateDate(null);
 						break;
 					}
 				case "open_date":
@@ -634,14 +660,17 @@ public class NewsServiceImpl implements NewsService {
 				case "sub_category":
 					e.setSubCategory((Integer) map.get(item));
 					break;
-				case "main_title":
+				case "main_category_name":
 					e.setMainCategoryName((String) map.get(item));
 					break;
-				case "sub_title":
+				case "sub_category_name":
 					e.setSubCategoryName((String) map.get(item));
 					break;
 				case "title":
 					e.setTitle((String) map.get(item));
+					break;
+				case "sub_title":
+					e.setSubTitle((String) map.get(item));
 					break;
 				case "text":
 					e.setText((String) map.get(item));
@@ -651,10 +680,10 @@ public class NewsServiceImpl implements NewsService {
 					break;
 				case "updata_date":
 					if (map.get(item) != null) {
-						e.setUpdataDate(((Timestamp) map.get(item)).toLocalDateTime());
+						e.setUpdateDate(((Timestamp) map.get(item)).toLocalDateTime());
 						break;
 					} else {
-						e.setUpdataDate(null);
+						e.setUpdateDate(null);
 						break;
 					}
 				case "open_date":
@@ -693,7 +722,8 @@ public class NewsServiceImpl implements NewsService {
 
 //		輸入INDEX找尋該頁號的問卷
 		Integer index = newReq.getIndex();
-		List<Map<String, Object>> res = newsDao.findAllNewsPagingB(index);
+		Integer items = newReq.getItems();
+		List<Map<String, Object>> res = newsDao.findAllNewsPagingB(index, items);
 
 //		將找出的問卷物件重組
 		for (Map<String, Object> map : res) {
@@ -709,14 +739,17 @@ public class NewsServiceImpl implements NewsService {
 				case "sub_category":
 					e.setSubCategory((Integer) map.get(item));
 					break;
-				case "main_title":
+				case "main_category_name":
 					e.setMainCategoryName((String) map.get(item));
 					break;
-				case "sub_title":
+				case "sub_category_name":
 					e.setSubCategoryName((String) map.get(item));
 					break;
 				case "title":
 					e.setTitle((String) map.get(item));
+					break;
+				case "sub_title":
+					e.setSubTitle((String) map.get(item));
 					break;
 				case "text":
 					e.setText((String) map.get(item));
@@ -726,10 +759,10 @@ public class NewsServiceImpl implements NewsService {
 					break;
 				case "updata_date":
 					if (map.get(item) != null) {
-						e.setUpdataDate(((Timestamp) map.get(item)).toLocalDateTime());
+						e.setUpdateDate(((Timestamp) map.get(item)).toLocalDateTime());
 						break;
 					} else {
-						e.setUpdataDate(null);
+						e.setUpdateDate(null);
 						break;
 					}
 				case "open_date":
@@ -781,14 +814,17 @@ public class NewsServiceImpl implements NewsService {
 				case "sub_category":
 					e.setSubCategory((Integer) map.get(item));
 					break;
-				case "main_title":
+				case "main_category_name":
 					e.setMainCategoryName((String) map.get(item));
 					break;
-				case "sub_title":
+				case "sub_category_name":
 					e.setSubCategoryName((String) map.get(item));
 					break;
 				case "title":
 					e.setTitle((String) map.get(item));
+					break;
+				case "sub_title":
+					e.setSubTitle((String) map.get(item));
 					break;
 				case "text":
 					e.setText((String) map.get(item));
@@ -798,10 +834,10 @@ public class NewsServiceImpl implements NewsService {
 					break;
 				case "updata_date":
 					if (map.get(item) != null) {
-						e.setUpdataDate(((Timestamp) map.get(item)).toLocalDateTime());
+						e.setUpdateDate(((Timestamp) map.get(item)).toLocalDateTime());
 						break;
 					} else {
-						e.setUpdataDate(null);
+						e.setUpdateDate(null);
 						break;
 					}
 				case "open_date":

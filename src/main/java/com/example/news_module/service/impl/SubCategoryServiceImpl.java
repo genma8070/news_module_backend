@@ -48,10 +48,10 @@ public class SubCategoryServiceImpl implements SubCategoryService {
 					List<Map<String, Object>> size = newsDao.findNewsByCategory(null, e.getSubId());
 					e.setNews(size.size());
 					break;
-				case "sub_title":
-					e.setSubTitle((String) map.get(item));
+				case "sub_category_name":
+					e.setSubCategoryName((String) map.get(item));
 					break;
-				case "father":
+				case "main_id":
 					e.setMainId((Integer) map.get(item));
 					break;
 				}
@@ -75,7 +75,7 @@ public class SubCategoryServiceImpl implements SubCategoryService {
 			SubCategoryResponse outPut = new SubCategoryResponse();
 			List<Map<String, Object>> size = newsDao.findNewsByCategory(null, target.getSubId());
 			outPut.setSubId(target.getSubId());
-			outPut.setSubTitle(target.getSubTitle());
+			outPut.setSubCategoryName(target.getSubCategoryName());
 			outPut.setMainId(target.getMainId());
 			outPut.setNews(size.size());
 			outPutList.add(outPut);
@@ -91,7 +91,7 @@ public class SubCategoryServiceImpl implements SubCategoryService {
 	
 
 	public SubCategoryResponse addSubCategory(SubCategoryRequest req) {
-		String name = req.getSubTitle();
+		String name = req.getSubCategoryName();
 		Integer main = req.getMainId();
 		SubCategory create = new SubCategory(name, main);
 		List<Map<String, Object>> target = subCategoryDao.findByTitle(name);
@@ -106,7 +106,7 @@ public class SubCategoryServiceImpl implements SubCategoryService {
 
 	public SubCategoryResponse updateSubCategory(SubCategoryRequest req) {
 		Integer id = req.getSubId();
-		String name = req.getSubTitle();
+		String name = req.getSubCategoryName();
 		SubCategory update = new SubCategory(id, name);
 		List<Map<String, Object>> target = subCategoryDao.findByTitle(name);
 		if (target.size() == 0) {
@@ -120,7 +120,7 @@ public class SubCategoryServiceImpl implements SubCategoryService {
 
 	public SubCategoryResponse deleteSubCategory(SubCategoryRequest req) {
 		Integer id = req.getSubId();
-		String name = req.getSubTitle();
+		String name = req.getSubCategoryName();
 		SubCategory delete = new SubCategory(id, name);
 		List<Map<String, Object>> target = newsDao.findNewsByCategory(null, id);
 		if (target.size() == 0) {

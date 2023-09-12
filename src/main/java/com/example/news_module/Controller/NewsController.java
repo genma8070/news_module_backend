@@ -26,9 +26,9 @@ public class NewsController {
 	};
 	
 //	ニュースを更新する
-	@PostMapping("/updata_news")
-	public NewsResponse updataNews(@RequestBody NewsRequest req) {
-		return newsService.updataNews(req);
+	@PostMapping("/update_news")
+	public NewsResponse updateNews(@RequestBody NewsRequest req) {
+		return newsService.updateNews(req);
 	};
 	
 //	ニュースの公開状態を変更する

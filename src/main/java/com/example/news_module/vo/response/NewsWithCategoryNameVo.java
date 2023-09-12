@@ -22,6 +22,8 @@ public class NewsWithCategoryNameVo {
 	private String subCategoryName;
 
 	private String title;
+	
+	private String subTitle;
 
 	private String text;
 	
@@ -31,7 +33,7 @@ public class NewsWithCategoryNameVo {
 	private LocalDateTime creatDate;
 	
 	
-	private LocalDateTime updataDate;
+	private LocalDateTime updateDate;
 
 	
 	private LocalDateTime openDate;
@@ -118,12 +120,12 @@ public class NewsWithCategoryNameVo {
 		this.creatDate = creatDate;
 	}
 
-	public LocalDateTime getUpdataDate() {
-		return updataDate;
+	public LocalDateTime getUpdateDate() {
+		return updateDate;
 	}
 
-	public void setUpdataDate(LocalDateTime updataDate) {
-		this.updataDate = updataDate;
+	public void setUpdateDate(LocalDateTime updateDate) {
+		this.updateDate = updateDate;
 	}
 
 	public String getMessage() {
@@ -136,7 +138,7 @@ public class NewsWithCategoryNameVo {
 
 	public NewsWithCategoryNameVo(List<NewsWithCategoryNameVo> list, Integer newsId, Integer mainCategory,
 			Integer subCategory, String mainCategoryName, String subCategoryName, String title, String text,
-			Boolean open, LocalDateTime creatDate, LocalDateTime updataDate, String message) {
+			Boolean open, LocalDateTime creatDate, LocalDateTime updateDate, String message) {
 		super();
 		this.list = list;
 		this.newsId = newsId;
@@ -148,7 +150,7 @@ public class NewsWithCategoryNameVo {
 		this.text = text;
 		this.open = open;
 		this.creatDate = creatDate;
-		this.updataDate = updataDate;
+		this.updateDate = updateDate;
 		this.message = message;
 	}
 
@@ -177,7 +179,7 @@ public class NewsWithCategoryNameVo {
 
 	public NewsWithCategoryNameVo(List<NewsWithCategoryNameVo> list, Integer newsId, Integer mainCategory,
 			Integer subCategory, String mainCategoryName, String subCategoryName, String title, String text,
-			Boolean open, LocalDateTime creatDate, LocalDateTime updataDate, LocalDateTime openDate) {
+			Boolean open, LocalDateTime creatDate, LocalDateTime updateDate, LocalDateTime openDate) {
 		super();
 		this.list = list;
 		this.newsId = newsId;
@@ -189,7 +191,54 @@ public class NewsWithCategoryNameVo {
 		this.text = text;
 		this.open = open;
 		this.creatDate = creatDate;
-		this.updataDate = updataDate;
+		this.updateDate = updateDate;
+		this.openDate = openDate;
+	}
+
+	public String getSubTitle() {
+		return subTitle;
+	}
+
+	public void setSubTitle(String subTitle) {
+		this.subTitle = subTitle;
+	}
+
+	public NewsWithCategoryNameVo(List<NewsWithCategoryNameVo> list, Integer newsId, Integer mainCategory,
+			Integer subCategory, String mainCategoryName, String subCategoryName, String title, String subTitle,
+			String text, Boolean open, LocalDateTime creatDate, LocalDateTime updateDate, LocalDateTime openDate,
+			String message) {
+		super();
+		this.list = list;
+		this.newsId = newsId;
+		this.mainCategory = mainCategory;
+		this.subCategory = subCategory;
+		this.mainCategoryName = mainCategoryName;
+		this.subCategoryName = subCategoryName;
+		this.title = title;
+		this.subTitle = subTitle;
+		this.text = text;
+		this.open = open;
+		this.creatDate = creatDate;
+		this.updateDate = updateDate;
+		this.openDate = openDate;
+		this.message = message;
+	}
+
+	public NewsWithCategoryNameVo(Integer newsId, Integer mainCategory, Integer subCategory, String mainCategoryName,
+			String subCategoryName, String title, String subTitle, String text, Boolean open, LocalDateTime creatDate,
+			LocalDateTime updateDate, LocalDateTime openDate) {
+		super();
+		this.newsId = newsId;
+		this.mainCategory = mainCategory;
+		this.subCategory = subCategory;
+		this.mainCategoryName = mainCategoryName;
+		this.subCategoryName = subCategoryName;
+		this.title = title;
+		this.subTitle = subTitle;
+		this.text = text;
+		this.open = open;
+		this.creatDate = creatDate;
+		this.updateDate = updateDate;
 		this.openDate = openDate;
 	}
 	

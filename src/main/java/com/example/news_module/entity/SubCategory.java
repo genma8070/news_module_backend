@@ -16,8 +16,8 @@ public class SubCategory {
 	@Column(name = "id")
 	private Integer subId;
 	
-	@Column(name = "sub_title")
-	private String subTitle;
+	@Column(name = "sub_category_name")
+	private String subCategoryName;
 	
 	@Column(name = "main_id")
 	private Integer mainId;
@@ -30,12 +30,12 @@ public class SubCategory {
 		this.subId = subId;
 	}
 
-	public String getSubTitle() {
-		return subTitle;
+	public String getSubCategoryName() {
+		return subCategoryName;
 	}
 
-	public void setSubTitle(String subTitle) {
-		this.subTitle = subTitle;
+	public void setSubCategoryName(String subCategoryName) {
+		this.subCategoryName = subCategoryName;
 	}
 
 	public Integer getMainId() {
@@ -46,10 +46,10 @@ public class SubCategory {
 		this.mainId = mainId;
 	}
 
-	public SubCategory(Integer subId, String subTitle, Integer mainId) {
+	public SubCategory(Integer subId, String subCategoryName, Integer mainId) {
 		super();
 		this.subId = subId;
-		this.subTitle = subTitle;
+		this.subCategoryName = subCategoryName;
 		this.mainId = mainId;
 	}
 
@@ -58,15 +58,15 @@ public class SubCategory {
 		// TODO Auto-generated constructor stub
 	}
 
-	public SubCategory(String subTitle, Integer mainId) {
+	public SubCategory(String subCategoryName, Integer mainId) {
 		super();
-		this.subTitle = subTitle;
+		this.subCategoryName = subCategoryName;
 		this.mainId = mainId;
 	}
 
-	public SubCategory(Integer subId, String subTitle) {
+	public SubCategory(Integer subId, String subCategoryName) {
 		super();
 		this.subId = subId;
-		this.subTitle = subTitle;
+		this.subCategoryName = subCategoryName;
 	}
 }

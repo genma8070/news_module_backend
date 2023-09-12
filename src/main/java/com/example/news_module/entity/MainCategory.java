@@ -16,8 +16,8 @@ public class MainCategory {
 	@Column(name = "id")
 	private Integer mainId;
 	
-	@Column(name = "main_title")
-	private String mainTitle;
+	@Column(name = "main_category_name")
+	private String mainCategoryName;
 
 	public Integer getMainId() {
 		return mainId;
@@ -27,18 +27,18 @@ public class MainCategory {
 		this.mainId = mainId;
 	}
 
-	public String getMainTitle() {
-		return mainTitle;
+	public String getMainCategoryName() {
+		return mainCategoryName;
 	}
 
-	public void setMainTitle(String mainTitle) {
-		this.mainTitle = mainTitle;
+	public void setMainCategoryName(String mainCategoryName) {
+		this.mainCategoryName = mainCategoryName;
 	}
 
-	public MainCategory(Integer mainId, String mainTitle) {
+	public MainCategory(Integer mainId, String mainCategoryName) {
 		super();
 		this.mainId = mainId;
-		this.mainTitle = mainTitle;
+		this.mainCategoryName = mainCategoryName;
 	}
 
 	public MainCategory() {
@@ -46,9 +46,9 @@ public class MainCategory {
 		// TODO Auto-generated constructor stub
 	}
 
-	public MainCategory(String mainTitle) {
+	public MainCategory(String mainCategoryName) {
 		super();
-		this.mainTitle = mainTitle;
+		this.mainCategoryName = mainCategoryName;
 	}
 	
 

@@ -8,12 +8,16 @@ public class NewsRequest {
 	private List<Integer> list;
 
 	private Integer newsId;
+	
+	private Integer items;
 
 	private Integer mainCategory;
 
 	private Integer subCategory;
 
 	private String title;
+	
+	private String subTitle;
 
 	private String text;
 	
@@ -23,7 +27,7 @@ public class NewsRequest {
 	private LocalDateTime creatDate;
 	
 	
-	private LocalDateTime updataDate;
+	private LocalDateTime updateDate;
 	
 	
 	private LocalDateTime startDate;
@@ -92,12 +96,12 @@ public class NewsRequest {
 		this.creatDate = creatDate;
 	}
 
-	public LocalDateTime getUpdataDate() {
-		return updataDate;
+	public LocalDateTime getUpdateDate() {
+		return updateDate;
 	}
 
-	public void setUpdataDate(LocalDateTime updataDate) {
-		this.updataDate = updataDate;
+	public void setUpdateDate(LocalDateTime updateDate) {
+		this.updateDate = updateDate;
 	}
 
 	public LocalDateTime getStartDate() {
@@ -138,6 +142,22 @@ public class NewsRequest {
 
 	public void setList(List<Integer> list) {
 		this.list = list;
+	}
+
+	public String getSubTitle() {
+		return subTitle;
+	}
+
+	public void setSubTitle(String subTitle) {
+		this.subTitle = subTitle;
+	}
+
+	public Integer getItems() {
+		return items;
+	}
+
+	public void setItems(Integer items) {
+		this.items = items;
 	}
 
 	

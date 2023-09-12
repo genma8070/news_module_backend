@@ -8,7 +8,7 @@ public class SubCategoryResponse {
 
 	private Integer subId;
 
-	private String subTitle;
+	private String subCategoryName;
 
 	private Integer mainId;
 	
@@ -30,12 +30,12 @@ public class SubCategoryResponse {
 		this.subId = subId;
 	}
 
-	public String getSubTitle() {
-		return subTitle;
+	public String getSubCategoryName() {
+		return subCategoryName;
 	}
 
-	public void setSubTitle(String subTitle) {
-		this.subTitle = subTitle;
+	public void setSubCategoryName(String subCategoryName) {
+		this.subCategoryName = subCategoryName;
 	}
 
 	public Integer getMainId() {
@@ -51,10 +51,10 @@ public class SubCategoryResponse {
 		// TODO Auto-generated constructor stub
 	}
 
-	public SubCategoryResponse(Integer subId, String subTitle, Integer mainId) {
+	public SubCategoryResponse(Integer subId, String subCategoryName, Integer mainId) {
 		super();
 		this.subId = subId;
-		this.subTitle = subTitle;
+		this.subCategoryName = subCategoryName;
 		this.mainId = mainId;
 	}
 
@@ -106,10 +106,10 @@ public class SubCategoryResponse {
 		this.news = news;
 	}
 
-	public SubCategoryResponse(Integer subId, String subTitle, Integer mainId, Integer news) {
+	public SubCategoryResponse(Integer subId, String subCategoryName, Integer mainId, Integer news) {
 		super();
 		this.subId = subId;
-		this.subTitle = subTitle;
+		this.subCategoryName = subCategoryName;
 		this.mainId = mainId;
 		this.news = news;
 	}

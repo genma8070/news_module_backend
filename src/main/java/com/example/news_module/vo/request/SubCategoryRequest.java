@@ -8,7 +8,7 @@ public class SubCategoryRequest {
 
 	private Integer subId;
 
-	private String subTitle;
+	private String subCategoryName;
 
 	private Integer mainId;
 
@@ -20,12 +20,12 @@ public class SubCategoryRequest {
 		this.subId = subId;
 	}
 
-	public String getSubTitle() {
-		return subTitle;
+	public String getSubCategoryName() {
+		return subCategoryName;
 	}
 
-	public void setSubTitle(String subTitle) {
-		this.subTitle = subTitle;
+	public void setSubCategoryName(String subCategoryName) {
+		this.subCategoryName = subCategoryName;
 	}
 
 	public Integer getMainId() {

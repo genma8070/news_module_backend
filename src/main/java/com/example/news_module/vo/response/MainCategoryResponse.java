@@ -8,7 +8,7 @@ public class MainCategoryResponse {
 
 	private Integer mainId;
 
-	private String mainTitle;
+	private String mainCategoryName;
 	
 	private String message;
 	
@@ -29,18 +29,18 @@ public class MainCategoryResponse {
 		this.mainId = mainId;
 	}
 
-	public String getMainTitle() {
-		return mainTitle;
+	public String getMainCategoryName() {
+		return mainCategoryName;
 	}
 
-	public void setMainTitle(String mainTitle) {
-		this.mainTitle = mainTitle;
+	public void setMainCategoryName(String mainCategoryName) {
+		this.mainCategoryName = mainCategoryName;
 	}
 
-	public MainCategoryResponse(Integer mainId, String mainTitle) {
+	public MainCategoryResponse(Integer mainId, String mainCategoryName) {
 		super();
 		this.mainId = mainId;
-		this.mainTitle = mainTitle;
+		this.mainCategoryName = mainCategoryName;
 	}
 
 	public MainCategoryResponse() {
@@ -64,10 +64,10 @@ public class MainCategoryResponse {
 		this.list = list;
 	}
 
-	public MainCategoryResponse(Integer mainId, String mainTitle, String message, List<MainCategory> list) {
+	public MainCategoryResponse(Integer mainId, String mainCategoryName, String message, List<MainCategory> list) {
 		super();
 		this.mainId = mainId;
-		this.mainTitle = mainTitle;
+		this.mainCategoryName = mainCategoryName;
 		this.message = message;
 		this.list = list;
 	}
@@ -100,10 +100,10 @@ public class MainCategoryResponse {
 		this.news = news;
 	}
 
-	public MainCategoryResponse(Integer mainId, String mainTitle, Integer news) {
+	public MainCategoryResponse(Integer mainId, String mainCategoryName, Integer news) {
 		super();
 		this.mainId = mainId;
-		this.mainTitle = mainTitle;
+		this.mainCategoryName = mainCategoryName;
 		this.news = news;
 	}
 

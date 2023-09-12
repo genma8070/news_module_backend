@@ -8,7 +8,7 @@ public class MainCategoryRequest {
 	
 	private Integer mainId;
 
-	private String mainTitle;
+	private String mainCategoryName;
 
 	public Integer getMainId() {
 		return mainId;
@@ -18,12 +18,12 @@ public class MainCategoryRequest {
 		this.mainId = mainId;
 	}
 
-	public String getMainTitle() {
-		return mainTitle;
+	public String getMainCategoryName() {
+		return mainCategoryName;
 	}
 
-	public void setMainTitle(String mainTitle) {
-		this.mainTitle = mainTitle;
+	public void setMainCategoryName(String mainCategoryName) {
+		this.mainCategoryName = mainCategoryName;
 	}
 
 	public List<Integer> getDeleteList() {

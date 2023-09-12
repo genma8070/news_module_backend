@@ -48,8 +48,8 @@ public class MainCategoryServiceImpl implements MainCategoryService {
 					List<Map<String, Object>> size = newsDao.findNewsByCategory(e.getMainId(), null);
 					e.setNews(size.size());
 					break;
-				case "main_title":
-					e.setMainTitle((String) map.get(item));
+				case "main_category_name":
+					e.setMainCategoryName((String) map.get(item));
 					break;
 
 				}
@@ -65,7 +65,7 @@ public class MainCategoryServiceImpl implements MainCategoryService {
 	}
 
 	public MainCategoryResponse addMainCategory(MainCategoryRequest req) {
-		String name = req.getMainTitle();
+		String name = req.getMainCategoryName();
 		MainCategory create = new MainCategory(name);
 		List<Map<String, Object>> target = mainCategoryDao.findByTitle(name);
 		if (target.size() == 0) {
@@ -79,7 +79,7 @@ public class MainCategoryServiceImpl implements MainCategoryService {
 
 	public MainCategoryResponse updateMainCategory(MainCategoryRequest req) {
 		Integer id = req.getMainId();
-		String name = req.getMainTitle();
+		String name = req.getMainCategoryName();
 		MainCategory update = new MainCategory(id, name);
 		List<Map<String, Object>> target = mainCategoryDao.findByTitle(name);
 		if (target.size() == 0) {
@@ -93,7 +93,7 @@ public class MainCategoryServiceImpl implements MainCategoryService {
 
 	public MainCategoryResponse deleteMainCategory(MainCategoryRequest req) {
 		Integer id = req.getMainId();
-		String name = req.getMainTitle();
+		String name = req.getMainCategoryName();
 		MainCategory delete = new MainCategory(id, name);
 		List<Map<String, Object>> target = newsDao.findNewsByCategory(id, null);
 		if (target.size() == 0) {

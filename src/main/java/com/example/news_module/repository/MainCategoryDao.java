@@ -17,7 +17,7 @@ public interface MainCategoryDao extends JpaRepository<MainCategory, Integer> {
 	@Query(value = "select * from main_categorys", nativeQuery = true)
 	public List<Map<String, Object>> findAllMain();
 
-	@Query(value = "select * from main_categorys where main_title = :inputTitle", nativeQuery = true)
+	@Query(value = "select * from main_categorys where main_category_name = :inputTitle", nativeQuery = true)
 	public List<Map<String, Object>> findByTitle(@Param("inputTitle") String Tilte);
 
 }

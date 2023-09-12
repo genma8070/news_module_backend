@@ -10,7 +10,7 @@ public interface NewsService {
 	public NewsResponse addNews(NewsRequest newReq);
 
 //	ニュースを更新する
-	public NewsResponse updataNews(NewsRequest newReq);
+	public NewsResponse updateNews(NewsRequest newReq);
 
 //	ニュースの公開状態を変更する
 	public NewsResponse hideNews(NewsRequest newReq);
