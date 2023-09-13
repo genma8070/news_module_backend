@@ -22,12 +22,12 @@ public class SubCategoryServiceImpl implements SubCategoryService {
 
 	@Autowired
 	private NewsDao newsDao;
-	
+
 	@Override
 	public SubCategoryResponse findSubCategoryById(SubCategoryRequest req) {
 		SubCategory target = subCategoryDao.findById(req.getSubId()).get();
 		return new SubCategoryResponse(target);
-		
+
 	}
 
 //	全てのサブカテゴリを取得する
@@ -65,13 +65,13 @@ public class SubCategoryServiceImpl implements SubCategoryService {
 		return new SubCategoryResponse(eList);
 
 	}
-	
+
 	@Override
 	public SubCategoryResponse getAllSubCategory() {
 
 		List<SubCategory> res = subCategoryDao.findAll();
 		List<SubCategoryResponse> outPutList = new ArrayList<>();
-		for(SubCategory target : res) {
+		for (SubCategory target : res) {
 			SubCategoryResponse outPut = new SubCategoryResponse();
 			List<Map<String, Object>> size = newsDao.findNewsByCategory(null, target.getSubId());
 			outPut.setSubId(target.getSubId());
@@ -80,7 +80,7 @@ public class SubCategoryServiceImpl implements SubCategoryService {
 			outPut.setNews(size.size());
 			outPutList.add(outPut);
 		}
-		
+
 		if (res.size() == 0) {
 			return new SubCategoryResponse("查無資料");
 		}
@@ -88,11 +88,16 @@ public class SubCategoryServiceImpl implements SubCategoryService {
 		return new SubCategoryResponse(outPutList);
 
 	}
-	
 
 	public SubCategoryResponse addSubCategory(SubCategoryRequest req) {
 		String name = req.getSubCategoryName();
 		Integer main = req.getMainId();
+		if (main == null) {
+			return new SubCategoryResponse("請選擇主分類");
+		}
+		if (name.isBlank()) {
+			return new SubCategoryResponse("名稱不可空白");
+		}
 		SubCategory create = new SubCategory(name, main);
 		List<Map<String, Object>> target = subCategoryDao.findByTitle(name);
 		if (target.size() == 0) {
@@ -119,16 +124,19 @@ public class SubCategoryServiceImpl implements SubCategoryService {
 	}
 
 	public SubCategoryResponse deleteSubCategory(SubCategoryRequest req) {
-		Integer id = req.getSubId();
-		String name = req.getSubCategoryName();
-		SubCategory delete = new SubCategory(id, name);
-		List<Map<String, Object>> target = newsDao.findNewsByCategory(null, id);
-		if (target.size() == 0) {
-			subCategoryDao.delete(delete);
-			return new SubCategoryResponse("刪除成功");
-		} else {
-			return new SubCategoryResponse("只能刪除空的分類");
+		List<Integer> deleteList = req.getDeleteList();
+		if(deleteList.size() == 0) {
+			return new SubCategoryResponse("未選取刪除項目");
 		}
+		for (Integer sub : deleteList) {
+			List<Map<String, Object>> target = newsDao.findNewsByCategory(null, sub);
+			if (target.size() == 0) {
+				subCategoryDao.deleteById(sub);
+			} else {
+				return new SubCategoryResponse("只能刪除空的分類");
+			}
+		}
+		return new SubCategoryResponse("刪除成功");
 
 	}
 

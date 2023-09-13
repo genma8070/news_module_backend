@@ -66,6 +66,9 @@ public class MainCategoryServiceImpl implements MainCategoryService {
 
 	public MainCategoryResponse addMainCategory(MainCategoryRequest req) {
 		String name = req.getMainCategoryName();
+		if (name.isBlank()) {
+			return new MainCategoryResponse("名稱不可空白");
+		}
 		MainCategory create = new MainCategory(name);
 		List<Map<String, Object>> target = mainCategoryDao.findByTitle(name);
 		if (target.size() == 0) {
@@ -92,16 +95,20 @@ public class MainCategoryServiceImpl implements MainCategoryService {
 	}
 
 	public MainCategoryResponse deleteMainCategory(MainCategoryRequest req) {
-		Integer id = req.getMainId();
-		String name = req.getMainCategoryName();
-		MainCategory delete = new MainCategory(id, name);
-		List<Map<String, Object>> target = newsDao.findNewsByCategory(id, null);
-		if (target.size() == 0) {
-			mainCategoryDao.delete(delete);
-			return new MainCategoryResponse("刪除成功");
-		} else {
-			return new MainCategoryResponse("只能刪除空的分類");
+		List<Integer> deleteList = req.getDeleteList();
+		if(deleteList.size() == 0) {
+			return new MainCategoryResponse("未選取刪除項目");
 		}
+		for (Integer main : deleteList) {
+			List<Map<String, Object>> target = newsDao.findNewsByCategory(main, null);
+			if (target.size() == 0) {
+				mainCategoryDao.deleteById(main);
+			} else {
+				return new MainCategoryResponse("只能刪除空的分類");
+			}
+		}
+		return new MainCategoryResponse("刪除成功");
+
 
 	}
 

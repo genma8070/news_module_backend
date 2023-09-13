@@ -30,5 +30,23 @@ public class MainCategoryController {
 		return mainCategoryService.findMainCategoryById(req);
 
 	};
+	
+	@PostMapping("/add_main")
+	public MainCategoryResponse addMainCategory(@RequestBody MainCategoryRequest req) {
+		return mainCategoryService.addMainCategory(req);
+
+	};
+	
+	@PostMapping("/update_main")
+	public MainCategoryResponse updateMainCategory(@RequestBody MainCategoryRequest req) {
+		return mainCategoryService.updateMainCategory(req);
+
+	};
+	
+	@PostMapping("/delete_main")
+	public MainCategoryResponse deleteMainCategory(@RequestBody MainCategoryRequest req) {
+		return mainCategoryService.deleteMainCategory(req);
+
+	};
 
 }

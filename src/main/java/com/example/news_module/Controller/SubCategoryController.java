@@ -48,5 +48,11 @@ public class SubCategoryController {
 		return subCategoryService.updateSubCategory(req);
 
 	};
+	
+	@PostMapping("/add_sub")
+	public SubCategoryResponse addSubCategory(@RequestBody SubCategoryRequest req) {
+		return subCategoryService.addSubCategory(req);
+
+	};
 
 }
