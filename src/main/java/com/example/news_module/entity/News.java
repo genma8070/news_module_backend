@@ -9,42 +9,50 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+//ニューステーブルのエンティティ
 @Entity
 @Table(name = "news")
 public class News {
 
+//	ニュースのID（自動生成）
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "news_id")
 	private Integer newsId;
 	
+//	ニュースのメインカテゴリ
 	@Column(name = "main_category")
 	private Integer mainCategory;
 	
+//	ニュースのサブカテゴリ
 	@Column(name = "sub_category")
 	private Integer subCategory;
 	
+//	ニュースのタイトル
 	@Column(name = "title")
 	private String title;
 	
+//	ニュースのサブタイトル
 	@Column(name = "sub_title")
 	private String subTitle;
 	
+//	ニュースの本文
 	@Column(name = "text")
 	private String text;
 	
+//	ニュースの公開状態
 	@Column(name = "open")
 	private Boolean open;
 	
-	
+//	ニュースの作成日
 	@Column(name = "creat_date")
 	private LocalDateTime creatDate;
 	
-	
+//	ニュースの更新日
 	@Column(name = "update_date")
 	private LocalDateTime updateDate;
 	
-	
+//	ニュースの公開日
 	@Column(name = "open_date")
 	private LocalDateTime openDate;
 
@@ -199,6 +207,12 @@ public class News {
 		this.open = open;
 		this.creatDate = creatDate;
 		this.openDate = openDate;
+	}
+
+	public News(Integer newsId, Boolean open) {
+		super();
+		this.newsId = newsId;
+		this.open = open;
 	}
 
 	

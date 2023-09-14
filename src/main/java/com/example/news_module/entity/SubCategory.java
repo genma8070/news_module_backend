@@ -7,18 +7,22 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+//サブカテゴリテーブルのエンティティ
 @Entity
 @Table(name = "sub_categorys")
 public class SubCategory {
 
+//	サブカテゴリのID（自動生成）
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Integer subId;
 	
+//	サブカテゴリの名称
 	@Column(name = "sub_category_name")
 	private String subCategoryName;
 	
+//	属しているメインカテゴリのID
 	@Column(name = "main_id")
 	private Integer mainId;
 
