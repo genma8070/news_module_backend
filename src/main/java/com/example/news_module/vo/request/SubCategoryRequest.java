@@ -2,14 +2,19 @@ package com.example.news_module.vo.request;
 
 import java.util.List;
 
+//サブカテゴリ関連のリクエストのクラス
 public class SubCategoryRequest {
 	
+//	サブカテゴリのIDリスト
 	private List<Integer> deleteList;
 
+//	サブカテゴリのID
 	private Integer subId;
 
+//	サブカテゴリの名称
 	private String subCategoryName;
 
+//	属しているメインカテゴリのID
 	private Integer mainId;
 
 	public Integer getSubId() {

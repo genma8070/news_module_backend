@@ -3,41 +3,55 @@ package com.example.news_module.vo.request;
 import java.time.LocalDateTime;
 import java.util.List;
 
+//ニュース関連のリクエストのクラス
 public class NewsRequest {
 	
+//	ニュースIDのリスト
 	private List<Integer> list;
 
+//	ニュースのID
 	private Integer newsId;
 	
+//	ページごとに表示するニュース数を意味する引数
 	private Integer items;
 
+//	ニュースのメインカテゴリ
 	private Integer mainCategory;
 
+//	ニュースのサブカテゴリ
 	private Integer subCategory;
 
+//	ニュースのタイトル
 	private String title;
 	
+//	ニュースのサブタイトル
 	private String subTitle;
 
+//	ニュースの本文
 	private String text;
 	
-	private Boolean open;
+//	ニュースの公開状態
+	private Integer open;
 	
-	
+//	ニュースの作成日
 	private LocalDateTime creatDate;
 	
-	
+//	ニュースの更新日
 	private LocalDateTime updateDate;
 	
-	
+//	検索条件の開始日
 	private LocalDateTime startDate;
 	
-	
+//	検索条件の結束日
 	private LocalDateTime endDate;
 	
-	
+//	ニュースの公開日
 	private LocalDateTime openDate;
 	
+//	ニュースの並べ方
+	private Boolean sort;
+	
+//	ページ数を意味する引数
 	private Integer index;
 
 	public Integer getNewsId() {
@@ -80,11 +94,11 @@ public class NewsRequest {
 		this.text = text;
 	}
 
-	public Boolean getOpen() {
+	public Integer getOpen() {
 		return open;
 	}
 
-	public void setOpen(Boolean open) {
+	public void setOpen(Integer open) {
 		this.open = open;
 	}
 
@@ -158,6 +172,14 @@ public class NewsRequest {
 
 	public void setItems(Integer items) {
 		this.items = items;
+	}
+
+	public Boolean getSort() {
+		return sort;
+	}
+
+	public void setSort(Boolean sort) {
+		this.sort = sort;
 	}
 
 	

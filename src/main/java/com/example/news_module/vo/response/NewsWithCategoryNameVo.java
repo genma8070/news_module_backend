@@ -5,40 +5,55 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-//ニューステーブルを基づいて外部結合によりメインカテゴリの名称とサブカテゴリの名称を追加したデータを扱うためのVo
+//ニューステーブルを基づいて外部結合によりメインカテゴリの名称
+//とサブカテゴリの名称を追加したデータを扱うためのクラス
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class NewsWithCategoryNameVo {
 	
+//	ニュースとカテゴリ名称Voのリスト
 	private List<NewsWithCategoryNameVo> list;
 	
+//	ニュースのID
 	private Integer newsId;
 
+//	ニュースのメインカテゴリ
 	private Integer mainCategory;
 
+//	ニュースのサブカテゴリ
 	private Integer subCategory;
 	
+//	メインカテゴリ名称
 	private String mainCategoryName;
 	
+//	サブカテゴリ名称
 	private String subCategoryName;
 
+//	ニュースのタイトル
 	private String title;
 	
+//	ニュースのサブタイトル
 	private String subTitle;
 
+//	ニュースの本文
 	private String text;
 	
-	private Boolean open;
+//	ニュースの公開状態
+	private Integer open;
 	
-	
+//	ニュースの作成日
 	private LocalDateTime creatDate;
 	
-	
+//	ニュースの更新日
 	private LocalDateTime updateDate;
 
-	
+//	ニュースの公開日
 	private LocalDateTime openDate;
 	
+//	メッセージ
 	private String message;
+	
+//	メッセージ種類
+    private Boolean messageType;
 
 	public List<NewsWithCategoryNameVo> getList() {
 		return list;
@@ -104,11 +119,11 @@ public class NewsWithCategoryNameVo {
 		this.text = text;
 	}
 
-	public Boolean getOpen() {
+	public Integer getOpen() {
 		return open;
 	}
 
-	public void setOpen(Boolean open) {
+	public void setOpen(Integer open) {
 		this.open = open;
 	}
 
@@ -138,7 +153,7 @@ public class NewsWithCategoryNameVo {
 
 	public NewsWithCategoryNameVo(List<NewsWithCategoryNameVo> list, Integer newsId, Integer mainCategory,
 			Integer subCategory, String mainCategoryName, String subCategoryName, String title, String text,
-			Boolean open, LocalDateTime creatDate, LocalDateTime updateDate, String message) {
+			Integer open, LocalDateTime creatDate, LocalDateTime updateDate, String message) {
 		super();
 		this.list = list;
 		this.newsId = newsId;
@@ -179,7 +194,7 @@ public class NewsWithCategoryNameVo {
 
 	public NewsWithCategoryNameVo(List<NewsWithCategoryNameVo> list, Integer newsId, Integer mainCategory,
 			Integer subCategory, String mainCategoryName, String subCategoryName, String title, String text,
-			Boolean open, LocalDateTime creatDate, LocalDateTime updateDate, LocalDateTime openDate) {
+			Integer open, LocalDateTime creatDate, LocalDateTime updateDate, LocalDateTime openDate) {
 		super();
 		this.list = list;
 		this.newsId = newsId;
@@ -205,7 +220,7 @@ public class NewsWithCategoryNameVo {
 
 	public NewsWithCategoryNameVo(List<NewsWithCategoryNameVo> list, Integer newsId, Integer mainCategory,
 			Integer subCategory, String mainCategoryName, String subCategoryName, String title, String subTitle,
-			String text, Boolean open, LocalDateTime creatDate, LocalDateTime updateDate, LocalDateTime openDate,
+			String text, Integer open, LocalDateTime creatDate, LocalDateTime updateDate, LocalDateTime openDate,
 			String message) {
 		super();
 		this.list = list;
@@ -225,7 +240,7 @@ public class NewsWithCategoryNameVo {
 	}
 
 	public NewsWithCategoryNameVo(Integer newsId, Integer mainCategory, Integer subCategory, String mainCategoryName,
-			String subCategoryName, String title, String subTitle, String text, Boolean open, LocalDateTime creatDate,
+			String subCategoryName, String title, String subTitle, String text, Integer open, LocalDateTime creatDate,
 			LocalDateTime updateDate, LocalDateTime openDate) {
 		super();
 		this.newsId = newsId;
@@ -240,6 +255,20 @@ public class NewsWithCategoryNameVo {
 		this.creatDate = creatDate;
 		this.updateDate = updateDate;
 		this.openDate = openDate;
+	}
+
+	public Boolean getMessageType() {
+		return messageType;
+	}
+
+	public void setMessageType(Boolean messageType) {
+		this.messageType = messageType;
+	}
+
+	public NewsWithCategoryNameVo(String message, Boolean messageType) {
+		super();
+		this.message = message;
+		this.messageType = messageType;
 	}
 	
 }

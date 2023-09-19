@@ -4,22 +4,33 @@ import java.util.List;
 
 import com.example.news_module.entity.MainCategory;
 
+//メインカテゴリ関連のリスポンスのクラス
 public class MainCategoryResponse {
 
+//	メインカテゴリのID
 	private Integer mainId;
 
+//	メインカテゴリ名称
 	private String mainCategoryName;
 	
+//	メッセージ
 	private String message;
 	
+//	メインカテゴリ中のニュース数
 	private Integer news;
 	
+//	メインカテゴリのエンティティ
 	private MainCategory main;
 	
+//	メインカテゴリのエンティティのリスト
 	private List<MainCategory> list;
 	
+//	メインカテゴリのリスポンスのリスト
 	private List<MainCategoryResponse> list2;
 	
+//	メッセージ種類
+    private Boolean messageType;
+		
 
 	public Integer getMainId() {
 		return mainId;
@@ -118,6 +129,20 @@ public class MainCategoryResponse {
 	public MainCategoryResponse(MainCategory main) {
 		super();
 		this.main = main;
+	}
+
+	public Boolean getMessageType() {
+		return messageType;
+	}
+
+	public void setMessageType(Boolean messageType) {
+		this.messageType = messageType;
+	}
+
+	public MainCategoryResponse(String message, Boolean messageType) {
+		super();
+		this.message = message;
+		this.messageType = messageType;
 	}
 
 }

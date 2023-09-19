@@ -15,9 +15,11 @@ public interface SubCategoryDao extends JpaRepository<SubCategory, Integer> {
 
 //	メインカテゴリのIDによる全てのサブカテゴリを取得する
 	@Query(value = "select * from sub_categorys where main_id = ?1", nativeQuery = true)
-	public List<Map<String, Object>> findAllSubByFather(Integer father);
+	public List<Map<String, Object>> findAllSubByMain(Integer main);
 
-	@Query(value = "select * from sub_categorys where sub_category_name = :inputTitle", nativeQuery = true)
-	public List<Map<String, Object>> findByTitle(@Param("inputTitle") String Tilte);
+//	同じタイトルのカテゴリを取得する
+	@Query(value = "select * from sub_categorys "
+			+ "where main_id = :inputMain AND sub_category_name = :inputTitle", nativeQuery = true)
+	public List<Map<String, Object>> findByTitle(@Param("inputTitle") String Tilte,@Param("inputMain")Integer main);
 
 }

@@ -2,12 +2,16 @@ package com.example.news_module.vo.request;
 
 import java.util.List;
 
+//メインカテゴリ関連のリクエストのクラス
 public class MainCategoryRequest {
 	
+//	メインカテゴリのIDリスト
 	private List<Integer> deleteList;
 	
+//	メインカテゴリのID
 	private Integer mainId;
 
+//	メインカテゴリの名称
 	private String mainCategoryName;
 
 	public Integer getMainId() {

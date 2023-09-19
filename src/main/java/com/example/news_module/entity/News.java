@@ -42,7 +42,7 @@ public class News {
 	
 //	ニュースの公開状態
 	@Column(name = "open")
-	private Boolean open;
+	private Integer open;
 	
 //	ニュースの作成日
 	@Column(name = "creat_date")
@@ -96,11 +96,11 @@ public class News {
 		this.text = text;
 	}
 
-	public Boolean getOpen() {
+	public Integer getOpen() {
 		return open;
 	}
 
-	public void setOpen(Boolean open) {
+	public void setOpen(Integer open) {
 		this.open = open;
 	}
 
@@ -128,7 +128,7 @@ public class News {
 		this.openDate = openDate;
 	}
 
-	public News(Integer newsId, Integer mainCategory, Integer subCategory, String title, String text, Boolean open,
+	public News(Integer newsId, Integer mainCategory, Integer subCategory, String title, String text, Integer open,
 			LocalDateTime creatDate, LocalDateTime updateDate, LocalDateTime openDate) {
 		super();
 		this.newsId = newsId;
@@ -142,7 +142,7 @@ public class News {
 		this.openDate = openDate;
 	}
 
-	public News(Integer mainCategory, Integer subCategory, String title, String text, Boolean open,
+	public News(Integer mainCategory, Integer subCategory, String title, String text, Integer open,
 			LocalDateTime creatDate, LocalDateTime openDate) {
 		super();
 		this.mainCategory = mainCategory;
@@ -168,7 +168,7 @@ public class News {
 	}
 
 	public News(Integer newsId, Integer mainCategory, Integer subCategory, String title, String subTitle, String text,
-			Boolean open, LocalDateTime creatDate, LocalDateTime updateDate, LocalDateTime openDate) {
+			Integer open, LocalDateTime creatDate, LocalDateTime updateDate, LocalDateTime openDate) {
 		super();
 		this.newsId = newsId;
 		this.mainCategory = mainCategory;
@@ -182,7 +182,7 @@ public class News {
 		this.openDate = openDate;
 	}
 
-	public News(Integer mainCategory, Integer subCategory, String title, String subTitle, String text, Boolean open,
+	public News(Integer mainCategory, Integer subCategory, String title, String subTitle, String text, Integer open,
 			LocalDateTime creatDate, LocalDateTime updateDate, LocalDateTime openDate) {
 		super();
 		this.mainCategory = mainCategory;
@@ -196,7 +196,7 @@ public class News {
 		this.openDate = openDate;
 	}
 
-	public News(Integer mainCategory, Integer subCategory, String title, String subTitle, String text, Boolean open,
+	public News(Integer mainCategory, Integer subCategory, String title, String subTitle, String text, Integer open,
 			LocalDateTime creatDate, LocalDateTime openDate) {
 		super();
 		this.mainCategory = mainCategory;
@@ -209,10 +209,16 @@ public class News {
 		this.openDate = openDate;
 	}
 
-	public News(Integer newsId, Boolean open) {
+	public News(Integer newsId, Integer open) {
 		super();
 		this.newsId = newsId;
 		this.open = open;
+	}
+
+	public News(Integer newsId, LocalDateTime openDate) {
+		super();
+		this.newsId = newsId;
+		this.openDate = openDate;
 	}
 
 	

@@ -25,24 +25,28 @@ public class MainCategoryController {
 
 	};
 	
+//	該当IDのメインカテゴリを取得する
 	@PostMapping("/find_main_by_id")
 	public MainCategoryResponse findMainCategoryById(@RequestBody MainCategoryRequest req) {
 		return mainCategoryService.findMainCategoryById(req);
 
 	};
 	
+//	メインカテゴリを追加する
 	@PostMapping("/add_main")
 	public MainCategoryResponse addMainCategory(@RequestBody MainCategoryRequest req) {
 		return mainCategoryService.addMainCategory(req);
 
 	};
 	
+//	メインカテゴリを更新する
 	@PostMapping("/update_main")
 	public MainCategoryResponse updateMainCategory(@RequestBody MainCategoryRequest req) {
 		return mainCategoryService.updateMainCategory(req);
 
 	};
 	
+//	メインカテゴリを削除する
 	@PostMapping("/delete_main")
 	public MainCategoryResponse deleteMainCategory(@RequestBody MainCategoryRequest req) {
 		return mainCategoryService.deleteMainCategory(req);

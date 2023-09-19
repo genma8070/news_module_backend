@@ -22,14 +22,8 @@ public class NewsController {
 	
 //	ニュースを追加する
 	@PostMapping("/new_news")
-	public NewsResponse addNews(@RequestBody NewsRequest req) {
-		return newsService.addNews(req);
-	};
-	
-//	ニュースを更新する
-	@PostMapping("/update_news")
-	public NewsResponse updateNews(@RequestBody NewsRequest req) {
-		return newsService.updateNews(req);
+	public NewsResponse addOrUpdateNews(@RequestBody NewsRequest req) {
+		return newsService.addOrUpdateNews(req);
 	};
 	
 //	ニュースの公開状態を非公開に変更する
@@ -38,7 +32,7 @@ public class NewsController {
 		return newsService.hideNews(req);
 	};
 	
-//	ニュースの公開状態を公開に変更する
+//	ニュースを公開に変更する
 	@PostMapping("/open")
 	public NewsResponse openNews(@RequestBody NewsRequest req) {
 		return newsService.openNews(req);
@@ -49,60 +43,36 @@ public class NewsController {
 	public NewsWithCategoryNameVo findAllF() {
 		return newsService.findAllF();
 	};
-//	選択したページのニュースを取得する（ユーザー側、公開日降順）
+//	該ページのニュースを取得する（ユーザー側、公開日降順）
 	@PostMapping("/find_all_news_f")
 	public NewsWithCategoryNameVo findAllNewsF(@RequestBody NewsRequest req) {
 		return newsService.findAllNewsF(req);
 	};
 	
 //	全てのニュースを取得する（管理者側、公開日降順）
-	@GetMapping("/get_all_b_desc")
-	public NewsWithCategoryNameVo findAllBDesc() {
-		return newsService.findAllBDesc();
+	@PostMapping("/get_all")
+	public NewsWithCategoryNameVo findAllBySort(@RequestBody NewsRequest req) {
+		return newsService.findAllBySort(req);
 	};
 	
 //	選択したページのニュースを取得する（管理者側、公開日降順）
-	@PostMapping("/find_all_news_b_desc")
-	public NewsWithCategoryNameVo findAllNewsBDesc(@RequestBody NewsRequest req) {
-		return newsService.findAllNewsBDesc(req);
+	@PostMapping("/find_all_news")
+	public NewsWithCategoryNameVo findAllNewsBySort(@RequestBody NewsRequest req) {
+		return newsService.findAllNewsBySort(req);
 	};
 
 //	選択したページの検索条件と一致するニュースを取得する（管理者側、公開日降順）
-	@PostMapping("/search_news_b_desc")
-	public NewsWithCategoryNameVo searchNewsBDesc(@RequestBody NewsRequest req) {
-		return newsService.searchNewsBDesc(req);
+	@PostMapping("/search_news")
+	public NewsWithCategoryNameVo searchNewsBySort(@RequestBody NewsRequest req) {
+		return newsService.searchNewsBySort(req);
 	};
 	
 //	検索条件と一致するニュースを取得する（管理者側、公開日降順）
-	@PostMapping("/search_news_b_A_desc")
-	public NewsWithCategoryNameVo searchNewsAllBDesc(@RequestBody NewsRequest req) {
-		return newsService.searchNewsAllBDesc(req);
+	@PostMapping("/search_news_A")
+	public NewsWithCategoryNameVo searchNewsAllBySort(@RequestBody NewsRequest req) {
+		return newsService.searchNewsAllBySort(req);
 	};
 	
-//	全てのニュースを取得する（管理者側、公開日昇順）
-	@GetMapping("/get_all_b_asc")
-	public NewsWithCategoryNameVo findAllBAsc() {
-		return newsService.findAllBAsc();
-	};
-	
-//	選択したページのニュースを取得する（管理者側、公開日昇順）
-	@PostMapping("/find_all_news_b_asc")
-	public NewsWithCategoryNameVo findAllNewsBAsc(@RequestBody NewsRequest req) {
-		return newsService.findAllNewsBAsc(req);
-	};
-
-//	選択したページの検索条件と一致するニュースを取得する（管理者側、公開日昇順）
-	@PostMapping("/search_news_b_asc")
-	public NewsWithCategoryNameVo searchNewsBAsc(@RequestBody NewsRequest req) {
-		return newsService.searchNewsBAsc(req);
-	};
-	
-//	検索条件と一致するニュースを取得する（管理者側、公開日昇順）
-	@PostMapping("/search_news_b_A_asc")
-	public NewsWithCategoryNameVo searchNewsAllBAsc(@RequestBody NewsRequest req) {
-		return newsService.searchNewsAllBAsc(req);
-	};
-
 //	該当IDのニュースを取得する
 	@PostMapping("/find_news_by_id")
 	public NewsResponse findNewsById(@RequestBody NewsRequest req) {

@@ -7,6 +7,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.news_module.contants.Pattern;
+import com.example.news_module.contants.MsgCode;
 import com.example.news_module.entity.MainCategory;
 import com.example.news_module.repository.MainCategoryDao;
 import com.example.news_module.repository.NewsDao;
@@ -23,11 +25,13 @@ public class MainCategoryServiceImpl implements MainCategoryService {
 	@Autowired
 	private NewsDao newsDao;
 
+//	該当IDのメインカテゴリを取得する
 	@Override
 	public MainCategoryResponse findMainCategoryById(MainCategoryRequest req) {
-		MainCategory target = mainCategoryDao.findById(req.getMainId()).get();
-		return new MainCategoryResponse(target);
 		
+		MainCategory target = mainCategoryDao.findById(req.getMainId()).get();
+		
+		return new MainCategoryResponse(target);
 	}
 	
 //	全てのメインカテゴリを取得する
@@ -45,6 +49,7 @@ public class MainCategoryServiceImpl implements MainCategoryService {
 
 				case "id":
 					e.setMainId((Integer) map.get(item));
+//					このカテゴリのニュースを取得する
 					List<Map<String, Object>> size = newsDao.findNewsByCategory(e.getMainId(), null);
 					e.setNews(size.size());
 					break;
@@ -57,57 +62,90 @@ public class MainCategoryServiceImpl implements MainCategoryService {
 			eList.add(e);
 		}
 		if (eList.size() == 0) {
-			return new MainCategoryResponse("查無資料");
+			return new MainCategoryResponse(MsgCode.NOT_FOUND.getMessage(), MsgCode.NOT_FOUND.getType());
 		}
 
 		return new MainCategoryResponse(eList);
 
 	}
 
+//	メインカテゴリを追加する
 	public MainCategoryResponse addMainCategory(MainCategoryRequest req) {
 		String name = req.getMainCategoryName();
-		if (name.isBlank()) {
-			return new MainCategoryResponse("名稱不可空白");
+		
+//		カテゴリ名称の字数が10桁以内かどうかの判断式
+		if(!name.matches(Pattern.CATEGORY_NAME.getPattern())) {
+			return new MainCategoryResponse(Pattern.CATEGORY_NAME.getMessage(), Pattern.CATEGORY_NAME.getType());
 		}
+		
+//		名称が空白かどうかの判断式
+		if (name.isBlank()) {
+			return new MainCategoryResponse(MsgCode.CANNOT_BLANK.getMessage(), MsgCode.CANNOT_BLANK.getType());
+		}
+		
 		MainCategory create = new MainCategory(name);
+//		既に同名のメインカテゴリがあるかどうかの判断式
 		List<Map<String, Object>> target = mainCategoryDao.findByTitle(name);
+//		同名がない場合はそのまま追加する
 		if (target.size() == 0) {
 			mainCategoryDao.save(create);
-			return new MainCategoryResponse("新建成功");
+			return new MainCategoryResponse(MsgCode.CATEGORY_CREATE_SUCCESSFUL.getMessage(), MsgCode.CATEGORY_CREATE_SUCCESSFUL.getType());
 		} else {
-			return new MainCategoryResponse("分類命名不得重複");
+			return new MainCategoryResponse(MsgCode.IS_EXISTED.getMessage(), MsgCode.IS_EXISTED.getType());
 		}
 
 	}
 
+//	メインカテゴリを更新する
 	public MainCategoryResponse updateMainCategory(MainCategoryRequest req) {
+		
 		Integer id = req.getMainId();
 		String name = req.getMainCategoryName();
+		
+//		カテゴリ名称の字数が10桁以内かどうかの判断式
+		if(!name.matches(Pattern.CATEGORY_NAME.getPattern())) {
+			return new MainCategoryResponse(Pattern.CATEGORY_NAME.getMessage(), Pattern.CATEGORY_NAME.getType());
+		}
+		
+//		名称が空白かどうかの判断式
+		if (name.isBlank()) {
+			return new MainCategoryResponse(MsgCode.CANNOT_BLANK.getMessage(), MsgCode.CANNOT_BLANK.getType());
+		}
+		
 		MainCategory update = new MainCategory(id, name);
+		
+//		既に同名のメインカテゴリがあるかどうかの判断式
 		List<Map<String, Object>> target = mainCategoryDao.findByTitle(name);
+//		同名がない場合はそのまま更新する
 		if (target.size() == 0) {
 			mainCategoryDao.save(update);
-			return new MainCategoryResponse("更新成功");
+			return new MainCategoryResponse(MsgCode.CATEGORY_EDIT_SUCCESSFUL.getMessage(), MsgCode.CATEGORY_EDIT_SUCCESSFUL.getType());
 		} else {
-			return new MainCategoryResponse("分類命名不得重複");
+			return new MainCategoryResponse(MsgCode.IS_EXISTED.getMessage(), MsgCode.IS_EXISTED.getType());
 		}
 
 	}
 
+//	メインカテゴリを削除する
 	public MainCategoryResponse deleteMainCategory(MainCategoryRequest req) {
+//		選択したメインカテゴリのIDリストを取得する
 		List<Integer> deleteList = req.getDeleteList();
+//		未選択かどうかの判断式
 		if(deleteList.size() == 0) {
-			return new MainCategoryResponse("未選取刪除項目");
+			return new MainCategoryResponse(MsgCode.NO_TARGET.getMessage(), MsgCode.NO_TARGET.getType());
 		}
+		
 		for (Integer main : deleteList) {
+//			このカテゴリのニュースを取得する
 			List<Map<String, Object>> target = newsDao.findNewsByCategory(main, null);
+//			ニュースがない場合は削除する
 			if (target.size() == 0) {
 				mainCategoryDao.deleteById(main);
 			} else {
-				return new MainCategoryResponse("只能刪除空的分類");
+				return new MainCategoryResponse(MsgCode.NOT_EMPTY.getMessage(), MsgCode.NOT_EMPTY.getType());
 			}
 		}
-		return new MainCategoryResponse("刪除成功");
+		return new MainCategoryResponse(MsgCode.CATEGORY_DELETE_SUCCESSFUL.getMessage(), MsgCode.CATEGORY_DELETE_SUCCESSFUL.getType());
 
 
 	}

@@ -4,23 +4,35 @@ import java.util.List;
 
 import com.example.news_module.entity.SubCategory;
 
+//サブカテゴリ関連のリスポンスのクラス
 public class SubCategoryResponse {
 
+//	サブカテゴリのID
 	private Integer subId;
 
+//	サブカテゴリの名称
 	private String subCategoryName;
 
+//	属しているメインカテゴリのID
 	private Integer mainId;
 	
+//	カテゴリ中のニュース数
 	private Integer news;
 
+//	メッセージ
 	private String message;
 	
+//	サブカテゴリのリスポンスのリスト
 	private List<SubCategoryResponse> list;
 	
+//	サブカテゴリのエンティティのリスト
 	private List<SubCategory> subList;
 	
+//	サブカテゴリのエンティティのリスト
 	private SubCategory sub;
+	
+//	メッセージ種類
+    private Boolean messageType;
 	
 	public Integer getSubId() {
 		return subId;
@@ -125,6 +137,20 @@ public class SubCategoryResponse {
 	public SubCategoryResponse(SubCategory sub) {
 		super();
 		this.sub = sub;
+	}
+
+	public Boolean getMessageType() {
+		return messageType;
+	}
+
+	public void setMessageType(Boolean messageType) {
+		this.messageType = messageType;
+	}
+
+	public SubCategoryResponse(String message, Boolean messageType) {
+		super();
+		this.message = message;
+		this.messageType = messageType;
 	}
 
 }
