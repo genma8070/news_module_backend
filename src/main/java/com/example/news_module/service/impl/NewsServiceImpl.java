@@ -10,8 +10,9 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.news_module.contants.Pattern;
 import com.example.news_module.contants.MsgCode;
+import com.example.news_module.contants.NewsStatus;
+import com.example.news_module.contants.Pattern;
 import com.example.news_module.entity.News;
 import com.example.news_module.repository.NewsDao;
 import com.example.news_module.service.ifs.NewsService;
@@ -26,7 +27,25 @@ public class NewsServiceImpl implements NewsService {
 	@Autowired
 	private NewsDao newsDao;
 
-//	ニュースを追加する
+//	ニュースの削除
+	@Override
+	public NewsResponse deleteNews(NewsRequest req) {
+		List<Integer> deleteList = req.getList();
+
+//		ニュースの選択があるかどうかの判断式
+		if (deleteList.size() == 0) {
+			return new NewsResponse(MsgCode.NO_TARGET.getMessage(), MsgCode.NO_TARGET.getType());
+		}
+
+		for (Integer id : deleteList) {
+			newsDao.deleteById(id);
+		}
+
+		return new NewsResponse(MsgCode.NEWS_DELETE_SUCCESSFUL.getMessage(), MsgCode.NEWS_DELETE_SUCCESSFUL.getType());
+
+	}
+
+//	ニュースの追加か更新
 	@Override
 	public NewsResponse addOrUpdateNews(NewsRequest req) {
 		String title = req.getTitle();
@@ -36,8 +55,13 @@ public class NewsServiceImpl implements NewsService {
 			return new NewsResponse(Pattern.TITLE.getMessage(), Pattern.TITLE.getType());
 		}
 
-		if (!subTitle.matches(Pattern.TITLE.getPattern())) {
-			return new NewsResponse(Pattern.TITLE.getMessage(), Pattern.TITLE.getType());
+		if (!subTitle.isEmpty()) {
+			if (!subTitle.matches(Pattern.TITLE.getPattern())) {
+				return new NewsResponse(Pattern.TITLE.getMessage(), Pattern.TITLE.getType());
+			}
+			if (subTitle.isBlank()) {
+				return new NewsResponse(MsgCode.CANNOT_BLANK.getMessage(), MsgCode.CANNOT_BLANK.getType());
+			}
 		}
 
 		String text = req.getText();
@@ -51,7 +75,7 @@ public class NewsServiceImpl implements NewsService {
 		LocalDateTime now = LocalDateTime.now();
 		LocalDateTime open = (req.getOpenDate() != null) ? req.getOpenDate() : now;
 		Integer status = null;
-		if (title.isBlank() || text.isBlank() || subTitle.isBlank()) {
+		if (title.isBlank() || text.isBlank()) {
 			return new NewsResponse(MsgCode.CANNOT_BLANK.getMessage(), MsgCode.CANNOT_BLANK.getType());
 		}
 		if (mainCategory == null || subCategory == null) {
@@ -59,12 +83,13 @@ public class NewsServiceImpl implements NewsService {
 		}
 
 //		開放日は追加した時間より以前なら公開状態を公開にします
-		if (open.compareTo(now) <= 0) {
-			status = 1;
+		if (open.compareTo(now) <= NewsStatus.WAIT.getStatus()) {
+			status = NewsStatus.OPEN.getStatus();
 		} else {
-			status = 0;
+			status = NewsStatus.WAIT.getStatus();
 		}
-		
+
+		// ID入力がある場合は更新する
 		if (req.getNewsId() != null) {
 //		更新するニュースを取得する
 			Optional<News> news = newsDao.findById(req.getNewsId());
@@ -87,65 +112,56 @@ public class NewsServiceImpl implements NewsService {
 
 	}
 
-//	ニュースの公開状態を非公開に変更する
+//	ニュースの公開か隠蔽
 	@Override
-	public NewsResponse hideNews(NewsRequest req) {
+	public NewsResponse openOrHideNews(NewsRequest req) {
 
 //		選択したニュースのIDリストを取得する
 		List<Integer> targets = req.getList();
+		Boolean sort = req.getSort();
 
 		if (targets.size() == 0) {
 			return new NewsResponse(MsgCode.NO_TARGET.getMessage(), MsgCode.NO_TARGET.getType());
 		}
 
 		LocalDateTime now = LocalDateTime.now();
-		for (Integer target : targets) {
-			Optional<News> news = newsDao.findById(target);
-			News n = news.get();
-//			既に非公開中かどうかを判断する
-			if (n.getOpen() != 1) {
-				continue;
-			} else {
-				n.setOpen(2);
-				n.setUpdateDate(now);
-				newsDao.save(n);
-			}
-		}
-		return new NewsResponse(MsgCode.NEWS_DELETE_SUCCESSFUL.getMessage(), MsgCode.NEWS_DELETE_SUCCESSFUL.getType());
 
-	}
-
-//	ニュースの公開状態を公開に変更する
-	@Override
-	public NewsResponse openNews(NewsRequest req) {
-
-//		選択したニュースのIDリストを取得する
-		List<Integer> targets = req.getList();
-
-		if (targets.size() == 0) {
-			return new NewsResponse(MsgCode.NO_TARGET.getMessage(), MsgCode.NO_TARGET.getType());
-		}
-
-		LocalDateTime now = LocalDateTime.now();
-		for (Integer target : targets) {
-			Optional<News> news = newsDao.findById(target);
-			News n = news.get();
-
+		// 判別入力で公開か隠蔽を執行する
+		if (sort) {
+			for (Integer target : targets) {
+				Optional<News> news = newsDao.findById(target);
+				News n = news.get();
 //			既に公開中かどうかを判断する
-			if (n.getOpen() == 1) {
-				continue;
-			} else {
-				n.setOpen(1);
-				n.setUpdateDate(now);
-				n.setOpenDate(now);
-				newsDao.save(n);
+				if (n.getOpen() == NewsStatus.OPEN.getStatus()) {
+					continue;
+				} else {
+					n.setOpen(NewsStatus.OPEN.getStatus());
+					n.setUpdateDate(now);
+					n.setOpenDate(now);
+					newsDao.save(n);
+				}
 			}
+			return new NewsResponse(MsgCode.NEWS_OPEN_SUCCESSFUL.getMessage(), MsgCode.NEWS_OPEN_SUCCESSFUL.getType());
+		} else {
+			for (Integer target : targets) {
+				Optional<News> news = newsDao.findById(target);
+				News n = news.get();
+//				既に隠蔽中かどうかを判断する
+				if (n.getOpen() != NewsStatus.OPEN.getStatus()) {
+					continue;
+				} else {
+					n.setOpen(NewsStatus.HIDE.getStatus());
+					n.setUpdateDate(now);
+					newsDao.save(n);
+				}
+			}
+			return new NewsResponse(MsgCode.NEWS_HIDE_SUCCESSFUL.getMessage(), MsgCode.NEWS_HIDE_SUCCESSFUL.getType());
+
 		}
-		return new NewsResponse(MsgCode.NEWS_OPEN_SUCCESSFUL.getMessage(), MsgCode.NEWS_OPEN_SUCCESSFUL.getType());
 
 	}
 
-//	該当IDのカテゴリ名称を含めているニュースデータを取得する
+//	該当IDのカテゴリ名称を含めているニュースを取得する
 	@Override
 	public NewsWithCategoryNameVo findFullNewsById(NewsRequest req) {
 		Integer id = req.getNewsId();
@@ -212,18 +228,18 @@ public class NewsServiceImpl implements NewsService {
 
 //	選択したページの公開中ニュースを取得する（ユーザー側、公開日降順）
 	@Override
-	public NewsWithCategoryNameVo findAllNewsF(NewsRequest newReq) {
+	public NewsWithCategoryNameVo findAllNewsUser(NewsRequest newReq) {
 
 		List<NewsWithCategoryNameVo> eList = new ArrayList<NewsWithCategoryNameVo>();
 
-//		ページ数を意味する引数
+//		ページ数
 		Integer index = newReq.getIndex();
 
-//		ページごとに表示するニュース数を意味する引数
+//		ページごとに表示するニュース数
 		Integer items = newReq.getItems();
 
 //		該当ページの指定数の公開中ニュースを取得する
-		List<Map<String, Object>> res = newsDao.findAllNewsPagingF(index, items);
+		List<Map<String, Object>> res = newsDao.findAllNewsPagingUser(index, items);
 
 		for (Map<String, Object> map : res) {
 			NewsWithCategoryNameVo e = new NewsWithCategoryNameVo();
@@ -291,11 +307,11 @@ public class NewsServiceImpl implements NewsService {
 
 //	全ての公開中ニュースを取得する（ユーザー側、公開日降順）
 	@Override
-	public NewsWithCategoryNameVo findAllF() {
+	public NewsWithCategoryNameVo findAllUser() {
 
 		List<NewsWithCategoryNameVo> eList = new ArrayList<NewsWithCategoryNameVo>();
 
-		List<Map<String, Object>> res = newsDao.findAllNewsF();
+		List<Map<String, Object>> res = newsDao.findAllNewsUser();
 
 		for (Map<String, Object> map : res) {
 			NewsWithCategoryNameVo e = new NewsWithCategoryNameVo();
@@ -351,19 +367,19 @@ public class NewsServiceImpl implements NewsService {
 					break;
 				}
 			}
-//			非公開のニュースが公開時間に到達したかどうかを判断する	
-			if (e.getOpen() == 0) {
+//			未公開のニュースが公開時間に到達したかどうかを判断する	
+			if (e.getOpen() == NewsStatus.WAIT.getStatus()) {
 				LocalDateTime now = LocalDateTime.now();
 				if (e.getOpenDate().compareTo(now) <= 0) {
-//				到達した場合は公開状態を公開にして更新する
-					e.setOpen(1);
+//				到達した場合は公開にして更新する
+					e.setOpen(NewsStatus.OPEN.getStatus());
 					News news = newsDao.findById(e.getNewsId()).get();
-					news.setOpen(1);
+					news.setOpen(NewsStatus.OPEN.getStatus());
 					newsDao.save(news);
 				}
 			}
 //			公開中のニュースだけリストに追加する
-			if (e.getOpen() == 1) {
+			if (e.getOpen() == NewsStatus.OPEN.getStatus()) {
 				eList.add(e);
 			}
 		}
@@ -381,14 +397,14 @@ public class NewsServiceImpl implements NewsService {
 //		タイトルで検索
 		String title = req.getTitle();
 
-//		時区間で検索（片方の検索もOK）
+//		時区間で検索（片方入力もOK）
 		LocalDateTime startTime = req.getStartDate();
 		LocalDateTime endTime = req.getEndDate();
 
-//		ページ数を意味する引数
+//		ページ数
 		Integer index = req.getIndex();
 
-//		ページごとに表示するニュース数を意味する引数
+//		ページごとに表示するニュース数
 		Integer items = req.getItems();
 
 //		カテゴリで検索
@@ -405,15 +421,15 @@ public class NewsServiceImpl implements NewsService {
 
 		Boolean sort = req.getSort();
 
-//		検索条件を基づいて検索する
+//		検索条件を基づいて検索する（判別入力で並べ方決める）
 		List<Map<String, Object>> res = sort
-				? newsDao.findNewsByTitleOrCategoryOrDateBDesc(title, main, sub, startTime, endTime, index, items)
-				: newsDao.findNewsByTitleOrCategoryOrDateBAsc(title, main, sub, startTime, endTime, index, items);
+				? newsDao.findNewsByTitleOrCategoryOrDateDesc(title, main, sub, startTime, endTime, index, items)
+				: newsDao.findNewsByTitleOrCategoryOrDateAsc(title, main, sub, startTime, endTime, index, items);
 
 		if (res == null) {
 			return new NewsWithCategoryNameVo(MsgCode.NOT_FOUND.getMessage(), MsgCode.NOT_FOUND.getType());
 		}
-		
+
 		for (Map<String, Object> map : res) {
 			NewsWithCategoryNameVo e = new NewsWithCategoryNameVo();
 			for (String item : map.keySet()) {
@@ -470,7 +486,7 @@ public class NewsServiceImpl implements NewsService {
 			}
 			eList.add(e);
 		}
-		
+
 		return new NewsWithCategoryNameVo(eList);
 
 	}
@@ -478,11 +494,10 @@ public class NewsServiceImpl implements NewsService {
 //	検索条件と一致するニュースを取得する（管理者側、公開日降順）
 	@Override
 	public NewsWithCategoryNameVo searchNewsAllBySort(NewsRequest req) {
-//		不輸入則搜尋全部所以不用設定防空白
 //		タイトルで検索
 		String title = req.getTitle();
 
-//		時区間で検索（片方の検索もOK）
+//		時区間で検索（片方入力もOK）
 		LocalDateTime startTime = req.getStartDate();
 		LocalDateTime endTime = req.getEndDate();
 
@@ -498,10 +513,10 @@ public class NewsServiceImpl implements NewsService {
 		List<NewsWithCategoryNameVo> eList = new ArrayList<NewsWithCategoryNameVo>();
 
 		Boolean sort = req.getSort();
-
+//		検索条件を基づいて検索する（判別入力で並べ方決める）
 		List<Map<String, Object>> res = sort
-				? newsDao.findAllNewsByTitleOrCategoryOrDateBDesc(title, main, sub, startTime, endTime)
-				: newsDao.findAllNewsByTitleOrCategoryOrDateBAsc(title, main, sub, startTime, endTime);
+				? newsDao.findAllNewsByTitleOrCategoryOrDateDesc(title, main, sub, startTime, endTime)
+				: newsDao.findAllNewsByTitleOrCategoryOrDateAsc(title, main, sub, startTime, endTime);
 
 //		將找出的問卷物件重組
 		for (Map<String, Object> map : res) {
@@ -558,14 +573,14 @@ public class NewsServiceImpl implements NewsService {
 					break;
 				}
 			}
-//			非公開のニュースが公開時間に到達したかどうかを判断する	
-			if (e.getOpen() == 0) {
+//			未公開のニュースが公開時間に到達したかどうかを判断する	
+			if (e.getOpen() == NewsStatus.WAIT.getStatus()) {
 				LocalDateTime now = LocalDateTime.now();
-				if (e.getOpenDate().compareTo(now) <= 0) {
-//				到達した場合は公開状態を公開にして更新する
-					e.setOpen(1);
+				if (e.getOpenDate().compareTo(now) <= NewsStatus.WAIT.getStatus()) {
+//				到達した場合は公開にして更新する
+					e.setOpen(NewsStatus.OPEN.getStatus());
 					News news = newsDao.findById(e.getNewsId()).get();
-					news.setOpen(1);
+					news.setOpen(NewsStatus.OPEN.getStatus());
 					newsDao.save(news);
 				}
 			}
@@ -585,14 +600,15 @@ public class NewsServiceImpl implements NewsService {
 		Boolean sort = newReq.getSort();
 		List<NewsWithCategoryNameVo> eList = new ArrayList<NewsWithCategoryNameVo>();
 
-//		ページ数を意味する引数
+//		ページ数
 		Integer index = newReq.getIndex();
 
-//		ページごとに表示するニュース数を意味する引数
+//		ページごとに表示するニュース数
 		Integer items = newReq.getItems();
 
-		List<Map<String, Object>> res = sort ? newsDao.findAllNewsPagingBDesc(index, items)
-				: newsDao.findAllNewsPagingBAsc(index, items);
+//		検索条件を基づいて検索する（判別入力で並べ方決める）
+		List<Map<String, Object>> res = sort ? newsDao.findAllNewsPagingDesc(index, items)
+				: newsDao.findAllNewsPagingAsc(index, items);
 
 //		將找出的問卷物件重組
 		for (Map<String, Object> map : res) {
@@ -649,20 +665,20 @@ public class NewsServiceImpl implements NewsService {
 					break;
 				}
 			}
-//			非公開のニュースが公開時間に到達したかどうかを判断する	
-			if (e.getOpen() == 0) {
+//			未公開のニュースが公開時間に到達したかどうかを判断する	
+			if (e.getOpen() == NewsStatus.WAIT.getStatus()) {
 				LocalDateTime now = LocalDateTime.now();
 				if (e.getOpenDate().compareTo(now) <= 0) {
-//				到達した場合は公開状態を公開にして更新する
-					e.setOpen(1);
+//				到達した場合は公開にして更新する
+					e.setOpen(NewsStatus.OPEN.getStatus());
 					News news = newsDao.findById(e.getNewsId()).get();
-					news.setOpen(1);
+					news.setOpen(NewsStatus.OPEN.getStatus());
 					newsDao.save(news);
 				}
 			}
 			eList.add(e);
 		}
-		if (eList.size() == 0) {
+		if (eList.size() == NewsStatus.WAIT.getStatus()) {
 			return new NewsWithCategoryNameVo(MsgCode.NOT_FOUND.getMessage(), MsgCode.NOT_FOUND.getType());
 		}
 		return new NewsWithCategoryNameVo(eList);
@@ -677,7 +693,8 @@ public class NewsServiceImpl implements NewsService {
 
 		List<NewsWithCategoryNameVo> eList = new ArrayList<NewsWithCategoryNameVo>();
 
-		List<Map<String, Object>> res = sort ? newsDao.findAllNewsBDesc() : newsDao.findAllNewsBAsc();
+//		検索条件を基づいて検索する（判別入力で並べ方決める）
+		List<Map<String, Object>> res = sort ? newsDao.findAllNewsDesc() : newsDao.findAllNewsAsc();
 
 		for (Map<String, Object> map : res) {
 			NewsWithCategoryNameVo e = new NewsWithCategoryNameVo();
@@ -733,14 +750,14 @@ public class NewsServiceImpl implements NewsService {
 					break;
 				}
 			}
-//			非公開のニュースが公開時間に到達したかどうかを判断する	
-			if (e.getOpen() == 0) {
+//			未公開のニュースが公開時間に到達したかどうかを判断する	
+			if (e.getOpen() == NewsStatus.WAIT.getStatus()) {
 				LocalDateTime now = LocalDateTime.now();
 				if (e.getOpenDate().compareTo(now) <= 0) {
-//				到達した場合は公開状態を公開にして更新する
-					e.setOpen(1);
+//				到達した場合は公開にして更新する
+					e.setOpen(NewsStatus.OPEN.getStatus());
 					News news = newsDao.findById(e.getNewsId()).get();
-					news.setOpen(1);
+					news.setOpen(NewsStatus.OPEN.getStatus());
 					newsDao.save(news);
 				}
 			}

@@ -1,16 +1,19 @@
 package com.example.news_module.contants;
 
-
+//メッセージコード
 	public enum MsgCode{
 		
+//		成功メッセージ
 		NEWS_CREATE_SUCCESSFUL(true, "ニュース追加成功しました"),
 		NEWS_EDIT_SUCCESSFUL(true, "ニュース更新成功しました"),
-		NEWS_DELETE_SUCCESSFUL(true, "ニュース未公開成功しました"),
+		NEWS_HIDE_SUCCESSFUL(true, "ニュース隠蔽成功しました"),
 		NEWS_OPEN_SUCCESSFUL(true, "ニュース公開成功しました"),
+		NEWS_DELETE_SUCCESSFUL(true, "ニュース削除成功しました"),
 		CATEGORY_CREATE_SUCCESSFUL(true, "カテゴリ追加成功しました"),
 		CATEGORY_EDIT_SUCCESSFUL(true, "カテゴリ更新成功しました"),
 		CATEGORY_DELETE_SUCCESSFUL(true, "カテゴリ削除成功しました"),
 		
+//		エラーメッセージ
 		IS_EXISTED(false, "同名のカテゴリが存在しています"),
 		CHOICE_CATEGORY(false, "カテゴリを選択してください"),
 		NEED_MAINCATEGORY_ID(false, "所属するメインカテゴリを選択してください"),

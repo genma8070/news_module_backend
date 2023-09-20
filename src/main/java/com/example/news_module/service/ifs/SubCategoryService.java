@@ -14,11 +14,8 @@ public interface SubCategoryService {
 //	該当IDのサブカテゴリを取得する
 	public SubCategoryResponse findSubCategoryById(SubCategoryRequest req);
 	
-//	サブカテゴリを追加する
-	public SubCategoryResponse addSubCategory(SubCategoryRequest req);
-
-//	サブカテゴリを更新する
-	public SubCategoryResponse updateSubCategory(SubCategoryRequest req);
+//	サブカテゴリの追加か更新
+	public SubCategoryResponse addOrUpdateSubCategory(SubCategoryRequest req);
 
 //	サブカテゴリを削除する
 	public SubCategoryResponse deleteSubCategory(SubCategoryRequest req);

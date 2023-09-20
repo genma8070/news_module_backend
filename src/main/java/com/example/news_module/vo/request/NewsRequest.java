@@ -3,7 +3,7 @@ package com.example.news_module.vo.request;
 import java.time.LocalDateTime;
 import java.util.List;
 
-//ニュース関連のリクエストのクラス
+//ニュース関連のリクエスト
 public class NewsRequest {
 	
 //	ニュースIDのリスト
@@ -12,7 +12,7 @@ public class NewsRequest {
 //	ニュースのID
 	private Integer newsId;
 	
-//	ページごとに表示するニュース数を意味する引数
+//	ページごとに表示するニュース数
 	private Integer items;
 
 //	ニュースのメインカテゴリ
@@ -48,7 +48,7 @@ public class NewsRequest {
 //	ニュースの公開日
 	private LocalDateTime openDate;
 	
-//	ニュースの並べ方
+//	メソッドの判別
 	private Boolean sort;
 	
 //	ページ数を意味する引数

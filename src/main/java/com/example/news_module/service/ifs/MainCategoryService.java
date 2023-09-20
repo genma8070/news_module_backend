@@ -11,11 +11,8 @@ public interface MainCategoryService {
 //	該当IDのメインカテゴリを取得する
 	public MainCategoryResponse findMainCategoryById(MainCategoryRequest req);
 	
-//	メインカテゴリを追加する
-	public MainCategoryResponse addMainCategory(MainCategoryRequest req);
-
-//	メインカテゴリを更新する
-	public MainCategoryResponse updateMainCategory(MainCategoryRequest req);
+//	メインカテゴリの追加か更新
+	public MainCategoryResponse addOrUpdateMainCategory(MainCategoryRequest req);
 
 //	メインカテゴリを削除する
 	public MainCategoryResponse deleteMainCategory(MainCategoryRequest req);

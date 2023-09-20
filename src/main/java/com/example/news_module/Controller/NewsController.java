@@ -20,33 +20,34 @@ public class NewsController {
 	@Autowired
 	private NewsService newsService;
 	
-//	ニュースを追加する
+//	ニュースの追加か更新
 	@PostMapping("/new_news")
 	public NewsResponse addOrUpdateNews(@RequestBody NewsRequest req) {
 		return newsService.addOrUpdateNews(req);
 	};
 	
-//	ニュースの公開状態を非公開に変更する
-	@PostMapping("/hide")
-	public NewsResponse hideNews(@RequestBody NewsRequest req) {
-		return newsService.hideNews(req);
+//	ニュースの削除
+	@PostMapping("/delete_news")
+	public NewsResponse deleteNews(@RequestBody NewsRequest req) {
+		return newsService.deleteNews(req);
 	};
 	
+
 //	ニュースを公開に変更する
-	@PostMapping("/open")
-	public NewsResponse openNews(@RequestBody NewsRequest req) {
-		return newsService.openNews(req);
+	@PostMapping("/open_or_hide")
+	public NewsResponse openOrHideNews(@RequestBody NewsRequest req) {
+		return newsService.openOrHideNews(req);
 	};
 	
 //	全てのニュースを取得する（ユーザー側、公開日降順）
 	@GetMapping("/get_all_f")
-	public NewsWithCategoryNameVo findAllF() {
-		return newsService.findAllF();
+	public NewsWithCategoryNameVo findAllUser() {
+		return newsService.findAllUser();
 	};
 //	該ページのニュースを取得する（ユーザー側、公開日降順）
 	@PostMapping("/find_all_news_f")
-	public NewsWithCategoryNameVo findAllNewsF(@RequestBody NewsRequest req) {
-		return newsService.findAllNewsF(req);
+	public NewsWithCategoryNameVo findAllNewsUser(@RequestBody NewsRequest req) {
+		return newsService.findAllNewsUser(req);
 	};
 	
 //	全てのニュースを取得する（管理者側、公開日降順）

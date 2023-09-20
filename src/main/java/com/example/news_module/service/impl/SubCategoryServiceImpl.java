@@ -5,10 +5,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.example.news_module.contants.Pattern;
 import com.example.news_module.contants.MsgCode;
+import com.example.news_module.contants.Pattern;
 import com.example.news_module.entity.SubCategory;
 import com.example.news_module.repository.NewsDao;
 import com.example.news_module.repository.SubCategoryDao;
@@ -73,7 +74,9 @@ public class SubCategoryServiceImpl implements SubCategoryService {
 	@Override
 	public SubCategoryResponse getAllSubCategory() {
 
-		List<SubCategory> res = subCategoryDao.findAll();
+		//並べ方を指定する
+		List<SubCategory> res = subCategoryDao.findAll(Sort.by(Sort.Direction.DESC, "mainId")
+                .and(Sort.by(Sort.Direction.DESC, "subId")));
 		List<SubCategoryResponse> outPutList = new ArrayList<>();
 		for (SubCategory target : res) {
 			SubCategoryResponse outPut = new SubCategoryResponse();
@@ -92,8 +95,8 @@ public class SubCategoryServiceImpl implements SubCategoryService {
 		return new SubCategoryResponse(outPutList);
 	}
 
-//	サブカテゴリを追加する
-	public SubCategoryResponse addSubCategory(SubCategoryRequest req) {
+//	サブカテゴリの追加か更新
+	public SubCategoryResponse addOrUpdateSubCategory(SubCategoryRequest req) {
 		String name = req.getSubCategoryName();
 
 //		カテゴリ名称の字数が10桁以内かどうかの判断式
@@ -113,50 +116,42 @@ public class SubCategoryServiceImpl implements SubCategoryService {
 		if (main == null) {
 			return new SubCategoryResponse(MsgCode.NEED_MAINCATEGORY_ID.getMessage(), MsgCode.NEED_MAINCATEGORY_ID.getType());
 		}
-
-		SubCategory create = new SubCategory(name, main);
-//		既に同名のサブカテゴリがあるかどうかの判断式
-		List<Map<String, Object>> target = subCategoryDao.findByTitle(name, main);
-//		同名がない場合はそのまま追加する
-		if (target.size() == 0) {
-			subCategoryDao.save(create);
-			return new SubCategoryResponse(MsgCode.CATEGORY_CREATE_SUCCESSFUL.getMessage(),
-					MsgCode.CATEGORY_CREATE_SUCCESSFUL.getType());
-		} else {
-			return new SubCategoryResponse(MsgCode.IS_EXISTED.getMessage(), MsgCode.IS_EXISTED.getType());
-		}
-
-	}
-
-//	サブカテゴリを更新する
-	public SubCategoryResponse updateSubCategory(SubCategoryRequest req) {
+		
 		Integer id = req.getSubId();
-		String name = req.getSubCategoryName();
-		Integer main =req.getMainId();
 
-//		カテゴリ名称の字数が10桁以内かどうかの判断式
-		if (!name.matches(Pattern.CATEGORY_NAME.getPattern())) {
-			return new SubCategoryResponse(Pattern.CATEGORY_NAME.getMessage(), Pattern.CATEGORY_NAME.getType());
+//		ID入力がある場合は更新する
+		if(id != null) {
+			SubCategory update = new SubCategory(id, name, main);
+//			既に同名のサブカテゴリがあるかどうかの判断式
+			List<Map<String, Object>> target = subCategoryDao.findByTitle(name, main);
+//			同名がない場合はそのまま更新する
+			if (target.size() == 0) {
+				subCategoryDao.save(update);
+				return new SubCategoryResponse(MsgCode.CATEGORY_EDIT_SUCCESSFUL.getMessage(),
+						MsgCode.CATEGORY_EDIT_SUCCESSFUL.getType());
+			} else {
+				return new SubCategoryResponse(MsgCode.IS_EXISTED.getMessage(), MsgCode.IS_EXISTED.getType());
+			}
+		}else {
+			SubCategory create = new SubCategory(name, main);
+//			既に同名のサブカテゴリがあるかどうかの判断式
+			List<Map<String, Object>> target = subCategoryDao.findByTitle(name, main);
+//			同名がない場合はそのまま追加する
+			if (target.size() == 0) {
+				subCategoryDao.save(create);
+				return new SubCategoryResponse(MsgCode.CATEGORY_CREATE_SUCCESSFUL.getMessage(),
+						MsgCode.CATEGORY_CREATE_SUCCESSFUL.getType());
+			} else {
+				return new SubCategoryResponse(MsgCode.IS_EXISTED.getMessage(), MsgCode.IS_EXISTED.getType());
+			}
+
+			
 		}
-
-//		名称が空白かどうかの判断式
-		if (name.isBlank()) {
-			return new SubCategoryResponse(MsgCode.CANNOT_BLANK.getMessage(), MsgCode.CANNOT_BLANK.getType());
-		}
-
-		SubCategory update = new SubCategory(id, name);
-//		既に同名のサブカテゴリがあるかどうかの判断式
-		List<Map<String, Object>> target = subCategoryDao.findByTitle(name, main);
-//		同名がない場合はそのまま更新する
-		if (target.size() == 0) {
-			subCategoryDao.save(update);
-			return new SubCategoryResponse(MsgCode.CATEGORY_EDIT_SUCCESSFUL.getMessage(),
-					MsgCode.CATEGORY_EDIT_SUCCESSFUL.getType());
-		} else {
-			return new SubCategoryResponse(MsgCode.IS_EXISTED.getMessage(), MsgCode.IS_EXISTED.getType());
-		}
-
+		
+		
 	}
+
+
 
 //	サブカテゴリを削除する
 	public SubCategoryResponse deleteSubCategory(SubCategoryRequest req) {

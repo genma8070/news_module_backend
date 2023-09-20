@@ -32,17 +32,10 @@ public class MainCategoryController {
 
 	};
 	
-//	メインカテゴリを追加する
+//	メインカテゴリの追加か更新
 	@PostMapping("/add_main")
-	public MainCategoryResponse addMainCategory(@RequestBody MainCategoryRequest req) {
-		return mainCategoryService.addMainCategory(req);
-
-	};
-	
-//	メインカテゴリを更新する
-	@PostMapping("/update_main")
-	public MainCategoryResponse updateMainCategory(@RequestBody MainCategoryRequest req) {
-		return mainCategoryService.updateMainCategory(req);
+	public MainCategoryResponse addOrUpdateMainCategory(@RequestBody MainCategoryRequest req) {
+		return mainCategoryService.addOrUpdateMainCategory(req);
 
 	};
 	

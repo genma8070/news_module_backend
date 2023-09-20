@@ -46,17 +46,11 @@ public class SubCategoryController {
 
 	};
 	
-//	サブカテゴリを更新する
-	@PostMapping("/update_sub")
-	public SubCategoryResponse updateSubCategory(@RequestBody SubCategoryRequest req) {
-		return subCategoryService.updateSubCategory(req);
-
-	};
 	
 //	サブカテゴリを追加する
 	@PostMapping("/add_sub")
-	public SubCategoryResponse addSubCategory(@RequestBody SubCategoryRequest req) {
-		return subCategoryService.addSubCategory(req);
+	public SubCategoryResponse addOrUpdateSubCategory(@RequestBody SubCategoryRequest req) {
+		return subCategoryService.addOrUpdateSubCategory(req);
 
 	};
 
