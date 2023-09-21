@@ -40,12 +40,12 @@ public class NewsController {
 	};
 	
 //	全てのニュースを取得する（ユーザー側、公開日降順）
-	@GetMapping("/get_all_f")
+	@GetMapping("/user_get_all")
 	public NewsWithCategoryNameVo findAllUser() {
 		return newsService.findAllUser();
 	};
 //	該ページのニュースを取得する（ユーザー側、公開日降順）
-	@PostMapping("/find_all_news_f")
+	@PostMapping("/user_find_all_news")
 	public NewsWithCategoryNameVo findAllNewsUser(@RequestBody NewsRequest req) {
 		return newsService.findAllNewsUser(req);
 	};

@@ -18,7 +18,7 @@ public class SubCategoryController {
 	@Autowired
 	private SubCategoryService subCategoryService;
 	
-//	該当メインカテゴリIDを基づいて所属しているサブカテゴリを取得する
+//	該当メインカテゴリIDに所属しているサブカテゴリを取得する
 	@PostMapping("/find_subC")
 	public SubCategoryResponse findSubCategoryByMainId(@RequestBody SubCategoryRequest req) {
 		return subCategoryService.findSubCategoryByMainId(req);
