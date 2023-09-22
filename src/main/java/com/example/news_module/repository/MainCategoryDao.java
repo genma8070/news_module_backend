@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.example.news_module.entity.MainCategory;
 
+//メインカテゴリDBのレスポストリ
 @Repository
 public interface MainCategoryDao extends JpaRepository<MainCategory, Integer> {
 

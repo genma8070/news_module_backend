@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.example.news_module.entity.SubCategory;
 
+//サブカテゴリDBのレスポストリ
 @Repository
 public interface SubCategoryDao extends JpaRepository<SubCategory, Integer> {
 

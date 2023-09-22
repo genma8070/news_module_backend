@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import com.example.news_module.entity.News;
 
+//ニュースDBのレスポストリ
 @Repository
 public interface NewsDao extends JpaRepository<News, Integer> {
 

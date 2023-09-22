@@ -11,6 +11,7 @@ import com.example.news_module.service.ifs.MainCategoryService;
 import com.example.news_module.vo.request.MainCategoryRequest;
 import com.example.news_module.vo.response.MainCategoryResponse;
 
+//メインカテゴリのメゾッドを制御するクラス
 @CrossOrigin
 @RestController
 public class MainCategoryController {

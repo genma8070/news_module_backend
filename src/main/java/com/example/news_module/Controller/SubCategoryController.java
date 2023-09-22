@@ -11,6 +11,7 @@ import com.example.news_module.service.ifs.SubCategoryService;
 import com.example.news_module.vo.request.SubCategoryRequest;
 import com.example.news_module.vo.response.SubCategoryResponse;
 
+//サブカテゴリのメゾッドを制御するクラス
 @CrossOrigin
 @RestController
 public class SubCategoryController {
