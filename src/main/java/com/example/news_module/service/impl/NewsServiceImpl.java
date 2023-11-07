@@ -48,36 +48,33 @@ public class NewsServiceImpl implements NewsService {
 //	ニュースの追加か更新
 	@Override
 	public NewsResponse addOrUpdateNews(NewsRequest req) {
+		Integer newsId = req.getNewsId();
 		String title = req.getTitle();
 		String subTitle = req.getSubTitle();
-
-		if (!title.matches(Pattern.TITLE.getPattern())) {
-			return new NewsResponse(Pattern.TITLE.getMessage(), Pattern.TITLE.getType());
-		}
-
-		if (!subTitle.isEmpty()) {
-			if (!subTitle.matches(Pattern.TITLE.getPattern())) {
-				return new NewsResponse(Pattern.TITLE.getMessage(), Pattern.TITLE.getType());
-			}
-			if (subTitle.isBlank()) {
-				return new NewsResponse(MsgCode.CANNOT_BLANK.getMessage(), MsgCode.CANNOT_BLANK.getType());
-			}
-		}
-
 		String text = req.getText();
-
-		if (!text.matches(Pattern.TEXT.getPattern())) {
-			return new NewsResponse(Pattern.TEXT.getMessage(), Pattern.TEXT.getType());
-		}
 		Integer mainCategory = req.getMainCategory();
 		Integer subCategory = req.getSubCategory();
 //		開放日を設定しない場合は追加成功した時点の時間になります
 		LocalDateTime now = LocalDateTime.now();
 		LocalDateTime open = (req.getOpenDate() != null) ? req.getOpenDate() : now;
 		Integer status = null;
+
 		if (title.isBlank() || text.isBlank()) {
 			return new NewsResponse(MsgCode.CANNOT_BLANK.getMessage(), MsgCode.CANNOT_BLANK.getType());
 		}
+
+		if (!title.matches(Pattern.TITLE.getPattern())) {
+			return new NewsResponse(Pattern.TITLE.getMessage(), Pattern.TITLE.getType());
+		}
+
+		if (!text.matches(Pattern.TEXT.getPattern())) {
+			return new NewsResponse(Pattern.TEXT.getMessage(), Pattern.TEXT.getType());
+		}
+
+		if (!subTitle.isBlank() && !subTitle.matches(Pattern.TITLE.getPattern())) {
+			return new NewsResponse(Pattern.TITLE.getMessage(), Pattern.TITLE.getType());
+		}
+
 		if (mainCategory == null || subCategory == null) {
 			return new NewsResponse(MsgCode.CHOICE_CATEGORY.getMessage(), MsgCode.CHOICE_CATEGORY.getType());
 		}
@@ -90,9 +87,9 @@ public class NewsServiceImpl implements NewsService {
 		}
 
 		// ID入力がある場合は更新する
-		if (req.getNewsId() != null) {
+		if (newsId != null) {
 //		更新するニュースを取得する
-			Optional<News> news = newsDao.findById(req.getNewsId());
+			Optional<News> news = newsDao.findById(newsId);
 			News target = news.get();
 			target.setMainCategory(mainCategory);
 			target.setSubCategory(subCategory);
@@ -104,12 +101,13 @@ public class NewsServiceImpl implements NewsService {
 			target.setOpen(status);
 			newsDao.save(target);
 			return new NewsResponse(MsgCode.NEWS_EDIT_SUCCESSFUL.getMessage(), MsgCode.NEWS_EDIT_SUCCESSFUL.getType());
+		} else {
+
+			News news = new News(mainCategory, subCategory, title, subTitle, text, status, now, open);
+			newsDao.save(news);
+			return new NewsResponse(MsgCode.NEWS_CREATE_SUCCESSFUL.getMessage(),
+					MsgCode.NEWS_CREATE_SUCCESSFUL.getType());
 		}
-
-		News news = new News(mainCategory, subCategory, title, subTitle, text, status, now, open);
-		newsDao.save(news);
-		return new NewsResponse(MsgCode.NEWS_CREATE_SUCCESSFUL.getMessage(), MsgCode.NEWS_CREATE_SUCCESSFUL.getType());
-
 	}
 
 //	ニュースの公開か隠蔽
@@ -147,7 +145,7 @@ public class NewsServiceImpl implements NewsService {
 				Optional<News> news = newsDao.findById(target);
 				News n = news.get();
 //				既に隠蔽中かどうかを判断する
-				if (n.getOpen() != NewsStatus.OPEN.getStatus()) {
+				if (n.getOpen() == NewsStatus.HIDE.getStatus()) {
 					continue;
 				} else {
 					n.setOpen(NewsStatus.HIDE.getStatus());
@@ -593,7 +591,7 @@ public class NewsServiceImpl implements NewsService {
 
 	}
 
-//	選択したページのニュースを取得する（管理者側、公開日降順）
+//	選択したページのニュースを取得する（管理者側）
 	@Override
 	public NewsWithCategoryNameVo findAllNewsBySort(NewsRequest newReq) {
 
@@ -678,14 +676,14 @@ public class NewsServiceImpl implements NewsService {
 			}
 			eList.add(e);
 		}
-		if (eList.size() == NewsStatus.WAIT.getStatus()) {
+		if (eList.size() == 0) {
 			return new NewsWithCategoryNameVo(MsgCode.NOT_FOUND.getMessage(), MsgCode.NOT_FOUND.getType());
 		}
 		return new NewsWithCategoryNameVo(eList);
 
 	}
 
-//	全てのニュースを取得する（管理者側、公開日降順）
+//	全てのニュースを取得する（管理者側）
 	@Override
 	public NewsWithCategoryNameVo findAllBySort(NewsRequest newReq) {
 

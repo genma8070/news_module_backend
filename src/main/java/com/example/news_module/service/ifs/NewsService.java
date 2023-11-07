@@ -22,16 +22,16 @@ public interface NewsService {
 //	全てのニュースを取得する（ユーザー側、公開日降順）
 	public NewsWithCategoryNameVo findAllUser();
 
-//	選択したページで検索条件と一致するニュースを取得する（管理者側、公開日降順）
+//	選択したページで検索条件と一致するニュースを取得する（管理者側）
 	public NewsWithCategoryNameVo searchNewsBySort(NewsRequest newReq);
 
-//	検索条件と一致するニュースを取得する（管理者側、公開日降順）
+//	検索条件と一致するニュースを取得する（管理者側）
 	public NewsWithCategoryNameVo searchNewsAllBySort(NewsRequest newReq);
 
-//	選択したページのニュースを取得する（管理者側、公開日降順）
+//	選択したページのニュースを取得する（管理者側）
 	public NewsWithCategoryNameVo findAllNewsBySort(NewsRequest newReq);
 
-//	全てのニュースを取得する（管理者側、降順）
+//	全てのニュースを取得する（管理者側）
 	public NewsWithCategoryNameVo findAllBySort(NewsRequest newReq);
 
 //	該当IDのカテゴリ名称を含めているニュースを取得する

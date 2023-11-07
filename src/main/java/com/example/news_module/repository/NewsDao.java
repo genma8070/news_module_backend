@@ -17,14 +17,14 @@ public interface NewsDao extends JpaRepository<News, Integer> {
 
 
 /*	選択したページのニュースを取得する（ユーザー側）
-	ニューステーブルにメインカテゴリテーブルとサブカテゴリテーブルを外部結合する
-	メインカテゴリテーブルとサブカテゴリテーブルからカテゴリ名称を取得する
+	ニューステーブルにメインカテゴリテーブルとサブカテゴリテーブルを外部結合してカテゴリ名称を取得する
+	公開中のニュースだけ取得する
 	検索結果は12番目のカラム欄open_date（公開日）の降順並び
-	検索結果は輸入したインデクスから最大100個まで表示する*/
-	@Query(value = "select n.news_id, n.main_category, n.sub_category, f.main_category_name,"
-			+ " c.sub_category_name, n.title, n.sub_title, n.text, n.open, n.creat_date, n.update_date, n.open_date from news n "
-			+ "left join main_categorys f on f.id = n.main_category "
-			+ "left join sub_categorys c on c.id = n.sub_category " + "WHERE open = true " + "ORDER BY 12 DESC "
+	輸入したインデックスから最大100個まで取得する*/
+	@Query(value = "SELECT n.news_id, n.main_category, n.sub_category, f.main_category_name,"
+			+ " c.sub_category_name, n.title, n.sub_title, n.text, n.open, n.creat_date, n.update_date, n.open_date FROM news n "
+			+ "LEFT JOIN main_categorys f on f.id = n.main_category "
+			+ "LEFT JOIN sub_categorys c on c.id = n.sub_category " + "WHERE open = 1 " + "ORDER BY 12 DESC "
 			+ "LIMIT :inputIndex, :inputItems", nativeQuery = true)
 	public List<Map<String, Object>> findAllNewsPagingUser(@Param("inputIndex") Integer index, @Param("inputItems") Integer items);
 
@@ -32,10 +32,10 @@ public interface NewsDao extends JpaRepository<News, Integer> {
 	ニューステーブルにメインカテゴリテーブルとサブカテゴリテーブルを外部結合する
 	メインカテゴリテーブルとサブカテゴリテーブルからカテゴリ名称を取得する
 	検索結果は12番目のカラム欄open_date（公開日）の降順並び*/
-	@Query(value = "select n.news_id, n.main_category, n.sub_category, f.main_category_name,"
-			+ " c.sub_category_name, n.title, n.sub_title, n.text, n.open, n.creat_date, n.update_date, n.open_date from news n "
-			+ "left join main_categorys f on f.id = n.main_category "
-			+ "left join sub_categorys c on c.id = n.sub_category "
+	@Query(value = "SELECT n.news_id, n.main_category, n.sub_category, f.main_category_name,"
+			+ " c.sub_category_name, n.title, n.sub_title, n.text, n.open, n.creat_date, n.update_date, n.open_date FROM news n "
+			+ "LEFT JOIN main_categorys f on f.id = n.main_category "
+			+ "LEFT JOIN sub_categorys c on c.id = n.sub_category "
 			+ "ORDER BY 12 DESC", nativeQuery = true)
 	public List<Map<String, Object>> findAllNewsUser();
 	
@@ -43,11 +43,11 @@ public interface NewsDao extends JpaRepository<News, Integer> {
 	ニューステーブルにメインカテゴリテーブルとサブカテゴリテーブルを外部結合する
 	メインカテゴリテーブルとサブカテゴリテーブルからカテゴリ名称を取得する
 	検索結果は12番目のカラム欄open_date（公開日）の昇順並び
-	検索結果は輸入したインデクスから最大100個まで表示する*/
-	@Query(value = "select n.news_id, n.main_category, n.sub_category, f.main_category_name,"
-			+ " c.sub_category_name, n.title, n.sub_title, n.text, n.open, n.creat_date, n.update_date, n.open_date from news n "
-			+ "left join main_categorys f on f.id = n.main_category "
-			+ "left join sub_categorys c on c.id = n.sub_category " + "ORDER BY 12 ASC "
+	輸入したインデクスから最大100個まで表示する*/
+	@Query(value = "SELECT n.news_id, n.main_category, n.sub_category, f.main_category_name,"
+			+ " c.sub_category_name, n.title, n.sub_title, n.text, n.open, n.creat_date, n.update_date, n.open_date FROM news n "
+			+ "LEFT JOIN main_categorys f on f.id = n.main_category "
+			+ "LEFT JOIN sub_categorys c on c.id = n.sub_category " + "ORDER BY 12 ASC "
 			+ "LIMIT :inputIndex, :inputItems", nativeQuery = true)
 	public List<Map<String, Object>> findAllNewsPagingAsc(@Param("inputIndex") Integer index, @Param("inputItems") Integer items);
 
@@ -55,10 +55,10 @@ public interface NewsDao extends JpaRepository<News, Integer> {
 	ニューステーブルにメインカテゴリテーブルとサブカテゴリテーブルを外部結合する
 	メインカテゴリテーブルとサブカテゴリテーブルからカテゴリ名称を取得する
 	検索結果は12番目のカラム欄open_date（公開日）の昇順並び*/
-	@Query(value = "select n.news_id, n.main_category, n.sub_category, f.main_category_name,"
-			+ " c.sub_category_name, n.title, n.sub_title, n.text, n.open, n.creat_date, n.update_date, n.open_date from news n "
-			+ "left join main_categorys f on f.id = n.main_category "
-			+ "left join sub_categorys c on c.id = n.sub_category "
+	@Query(value = "SELECT n.news_id, n.main_category, n.sub_category, f.main_category_name,"
+			+ " c.sub_category_name, n.title, n.sub_title, n.text, n.open, n.creat_date, n.update_date, n.open_date FROM news n "
+			+ "LEFT JOIN main_categorys f on f.id = n.main_category "
+			+ "LEFT JOIN sub_categorys c on c.id = n.sub_category "
 			+ "ORDER BY 12 ASC", nativeQuery = true)
 	public List<Map<String, Object>> findAllNewsAsc();
 
@@ -67,10 +67,10 @@ public interface NewsDao extends JpaRepository<News, Integer> {
 	メインカテゴリテーブルとサブカテゴリテーブルからカテゴリ名称を取得する
 	検索結果は12番目のカラム欄open_date（公開日）の降順並び
 	検索結果は輸入したインデクスから最大100個まで表示する*/
-	@Query(value = "select n.news_id, n.main_category, n.sub_category, f.main_category_name,"
-			+ " c.sub_category_name, n.title, n.sub_title, n.text, n.open, n.creat_date, n.update_date, n.open_date from news n "
-			+ "left join main_categorys f on f.id = n.main_category "
-			+ "left join sub_categorys c on c.id = n.sub_category" + " ORDER BY 12 DESC "
+	@Query(value = "SELECT n.news_id, n.main_category, n.sub_category, f.main_category_name,"
+			+ " c.sub_category_name, n.title, n.sub_title, n.text, n.open, n.creat_date, n.update_date, n.open_date FROM news n "
+			+ "LEFT JOIN main_categorys f on f.id = n.main_category "
+			+ "LEFT JOIN sub_categorys c on c.id = n.sub_category" + " ORDER BY 12 DESC "
 			+ "LIMIT :inputIndex, :inputItems", nativeQuery = true)
 	public List<Map<String, Object>> findAllNewsPagingDesc(@Param("inputIndex") Integer index, @Param("inputItems") Integer items);
 
@@ -78,10 +78,10 @@ public interface NewsDao extends JpaRepository<News, Integer> {
 //	ニューステーブルにメインカテゴリテーブルとサブカテゴリテーブルを外部結合する
 //	メインカテゴリテーブルとサブカテゴリテーブルからカテゴリ名称を取得する
 //	検索結果は12番目のカラム欄open_date（公開日）の降順並び
-	@Query(value = "select n.news_id, n.main_category, n.sub_category, f.main_category_name,"
-			+ " c.sub_category_name, n.title, n.sub_title, n.text, n.open, n.creat_date, n.update_date, n.open_date from news n "
-			+ "left join main_categorys f on f.id = n.main_category "
-			+ "left join sub_categorys c on c.id = n.sub_category " + "ORDER BY 12 DESC", nativeQuery = true)
+	@Query(value = "SELECT n.news_id, n.main_category, n.sub_category, f.main_category_name,"
+			+ " c.sub_category_name, n.title, n.sub_title, n.text, n.open, n.creat_date, n.update_date, n.open_date FROM news n "
+			+ "LEFT JOIN main_categorys f on f.id = n.main_category "
+			+ "LEFT JOIN sub_categorys c on c.id = n.sub_category " + "ORDER BY 12 DESC", nativeQuery = true)
 	public List<Map<String, Object>> findAllNewsDesc();
 	
 
@@ -91,13 +91,13 @@ public interface NewsDao extends JpaRepository<News, Integer> {
 	検索条件の説明：
 	タイトルのあいまい検索
 	カテゴリを選択する場合は検索結果を制限する、選択しない場合は制限しない
-	二つの日にちの間のニュースを取得する、下限を選択しない場合は自動に1911-01-01を代入する、下限を選択しない場合は自動に2123-01-01を代入する
+	二つの日時の間のニュースを取得する、下限を選択しない場合は自動に1911-01-01を代入する、上限を選択しない場合は自動に2123-01-01を代入する
 	検索結果は12番目のカラム欄open_date（公開日）の降順並び
 	検索結果は輸入したインデクスから最大100個まで表示する*/
-	@Query(value = "select n.news_id, n.main_category, n.sub_category, f.main_category_name,"
-			+ " c.sub_category_name, n.title, n.sub_title, n.text, n.open, n.creat_date, n.update_date, n.open_date from news n "
-			+ "left join main_categorys f on f.id = n.main_category "
-			+ "left join sub_categorys c on c.id = n.sub_category " + "WHERE (title LIKE %:inputTitle%) "
+	@Query(value = "SELECT n.news_id, n.main_category, n.sub_category, f.main_category_name,"
+			+ " c.sub_category_name, n.title, n.sub_title, n.text, n.open, n.creat_date, n.update_date, n.open_date FROM news n "
+			+ "LEFT JOIN main_categorys f on f.id = n.main_category "
+			+ "LEFT JOIN sub_categorys c on c.id = n.sub_category " + "WHERE (title LIKE %:inputTitle%) "
 			+ "AND (main_category = :inputMain OR :inputMain IS NULL) "
 			+ "AND (sub_category = :inputSub OR :inputSub IS NULL) "
 			+ "AND (open_date BETWEEN COALESCE(:inputStartTime, '1911-01-01') AND COALESCE(:inputEndTime, '2123-01-01')) "
@@ -107,19 +107,19 @@ public interface NewsDao extends JpaRepository<News, Integer> {
 			@Param("inputStartTime") LocalDateTime startTime, @Param("inputEndTime") LocalDateTime endTime,
 			@Param("inputIndex") Integer index, @Param("inputItems") Integer items);
 
-/*	選択したページの検索条件と一致するニュースを取得する（管理者側）
+/*	選択したページの検索条件と一致するニュースを取得する（管理者側、昇順）
 	ニューステーブルにメインカテゴリテーブルとサブカテゴリテーブルを外部結合する
 	メインカテゴリテーブルとサブカテゴリテーブルからカテゴリ名称を取得する
 	検索条件の説明：
 	タイトルのあいまい検索
 	カテゴリを選択する場合は検索結果を制限する、選択しない場合は制限しない
-	二つの日にちの間のニュースを取得する、下限を選択しない場合は自動に1911-01-01を代入する、下限を選択しない場合は自動に2123-01-01を代入する
+	二つの日にちの間のニュースを取得する、下限を選択しない場合は自動に1911-01-01を代入する、上限を選択しない場合は自動に2123-01-01を代入する
 	検索結果は12番目のカラム欄open_date（公開日）の昇順並び
 	検索結果は輸入したインデクスから最大100個まで表示する*/
-	@Query(value = "select n.news_id, n.main_category, n.sub_category, f.main_category_name,"
-			+ " c.sub_category_name, n.title, n.sub_title, n.text, n.open, n.creat_date, n.update_date, n.open_date from news n "
-			+ "left join main_categorys f on f.id = n.main_category "
-			+ "left join sub_categorys c on c.id = n.sub_category " + "WHERE (title LIKE %:inputTitle%) "
+	@Query(value = "SELECT n.news_id, n.main_category, n.sub_category, f.main_category_name,"
+			+ " c.sub_category_name, n.title, n.sub_title, n.text, n.open, n.creat_date, n.update_date, n.open_date FROM news n "
+			+ "LEFT JOIN main_categorys f on f.id = n.main_category "
+			+ "LEFT JOIN sub_categorys c on c.id = n.sub_category " + "WHERE (title LIKE %:inputTitle%) "
 			+ "AND (main_category = :inputMain OR :inputMain IS NULL) "
 			+ "AND (sub_category = :inputSub OR :inputSub IS NULL) "
 			+ "AND (open_date BETWEEN COALESCE(:inputStartTime, '1911-01-01') AND COALESCE(:inputEndTime, '2123-01-01')) "
@@ -130,7 +130,7 @@ public interface NewsDao extends JpaRepository<News, Integer> {
 			@Param("inputIndex") Integer index, @Param("inputItems") Integer items);
 
 	
-/*	検索条件と一致するニュースを取得する（管理者側）
+/*	検索条件と一致するニュースを取得する（管理者側、降順）
 	ニューステーブルにメインカテゴリテーブルとサブカテゴリテーブルを外部結合する
 	メインカテゴリテーブルとサブカテゴリテーブルからカテゴリ名称を取得する
 	検索条件の説明：
@@ -138,10 +138,10 @@ public interface NewsDao extends JpaRepository<News, Integer> {
 	カテゴリを選択する場合は検索結果を制限する、選択しない場合は制限しない
 	二つの日にちの間のニュースを取得する、下限を選択しない場合は自動に1911-01-01を代入する、下限を選択しない場合は自動に2123-01-01を代入する
 	検索結果は12番目のカラム欄open_date（公開日）の降順並び*/
-	@Query(value = "select n.news_id, n.main_category, n.sub_category, f.main_category_name,"
-			+ " c.sub_category_name, n.title, n.sub_title, n.text, n.open, n.creat_date, n.update_date, n.open_date from news n "
-			+ "left join main_categorys f on f.id = n.main_category "
-			+ "left join sub_categorys c on c.id = n.sub_category " + "WHERE (title LIKE %:inputTitle%) "
+	@Query(value = "SELECT n.news_id, n.main_category, n.sub_category, f.main_category_name,"
+			+ " c.sub_category_name, n.title, n.sub_title, n.text, n.open, n.creat_date, n.update_date, n.open_date FROM news n "
+			+ "LEFT JOIN main_categorys f on f.id = n.main_category "
+			+ "LEFT JOIN sub_categorys c on c.id = n.sub_category " + "WHERE (title LIKE %:inputTitle%) "
 			+ "AND (main_category = :inputMain OR :inputMain IS NULL) "
 			+ "AND (sub_category = :inputSub OR :inputSub IS NULL) "
 			+ "AND (open_date BETWEEN COALESCE(:inputStartTime, '1911-01-01') AND COALESCE(:inputEndTime, '2123-01-01')) "
@@ -150,7 +150,7 @@ public interface NewsDao extends JpaRepository<News, Integer> {
 			@Param("inputMain") Integer main, @Param("inputSub") Integer sub,
 			@Param("inputStartTime") LocalDateTime startTime, @Param("inputEndTime") LocalDateTime endTime);
 
-/*	検索条件と一致するニュースを取得する（管理者側）
+/*	検索条件と一致するニュースを取得する（管理者側、昇順）
 	ニューステーブルにメインカテゴリテーブルとサブカテゴリテーブルを外部結合する
 	メインカテゴリテーブルとサブカテゴリテーブルからカテゴリ名称を取得する
 	検索条件の説明：
@@ -158,10 +158,10 @@ public interface NewsDao extends JpaRepository<News, Integer> {
 	カテゴリを選択する場合は検索結果を制限する、選択しない場合は制限しない
 	二つの日にちの間のニュースを取得する、下限を選択しない場合は自動に1911-01-01を代入する、下限を選択しない場合は自動に2123-01-01を代入する
 	検索結果は12番目のカラム欄open_date（公開日）の昇順並び*/
-	@Query(value = "select n.news_id, n.main_category, n.sub_category, f.main_category_name,"
-			+ " c.sub_category_name, n.title, n.sub_title, n.text, n.open, n.creat_date, n.update_date, n.open_date from news n "
-			+ "left join main_categorys f on f.id = n.main_category "
-			+ "left join sub_categorys c on c.id = n.sub_category " + "WHERE (title LIKE %:inputTitle%) "
+	@Query(value = "SELECT n.news_id, n.main_category, n.sub_category, f.main_category_name,"
+			+ " c.sub_category_name, n.title, n.sub_title, n.text, n.open, n.creat_date, n.update_date, n.open_date FROM news n "
+			+ "LEFT JOIN main_categorys f on f.id = n.main_category "
+			+ "LEFT JOIN sub_categorys c on c.id = n.sub_category " + "WHERE (title LIKE %:inputTitle%) "
 			+ "AND (main_category = :inputMain OR :inputMain IS NULL) "
 			+ "AND (sub_category = :inputSub OR :inputSub IS NULL) "
 			+ "AND (open_date BETWEEN COALESCE(:inputStartTime, '1911-01-01') AND COALESCE(:inputEndTime, '2123-01-01')) "
@@ -170,16 +170,16 @@ public interface NewsDao extends JpaRepository<News, Integer> {
 			@Param("inputMain") Integer main, @Param("inputSub") Integer sub,
 			@Param("inputStartTime") LocalDateTime startTime, @Param("inputEndTime") LocalDateTime endTime);
 
-/*	検索条件と一致するニュースを取得する（管理者側）
+/*	検索条件と一致するニュースを取得する（管理者側、降順）
 	ニューステーブルにメインカテゴリテーブルとサブカテゴリテーブルを外部結合する
 	メインカテゴリテーブルとサブカテゴリテーブルからカテゴリ名称を取得する
 	検索条件の説明：
 	カテゴリを選択する場合は検索結果を制限する、選択しない場合は制限しない
 	検索結果は12番目のカラム欄open_date（公開日）の降順並び*/
-	@Query(value = "select n.news_id, n.main_category, n.sub_category, f.main_category_name,"
-			+ " c.sub_category_name, n.title, n.sub_title, n.text, n.open, n.creat_date, n.update_date, n.open_date from news n "
-			+ "left join main_categorys f on f.id = n.main_category "
-			+ "left join sub_categorys c on c.id = n.sub_category WHERE "
+	@Query(value = "SELECT n.news_id, n.main_category, n.sub_category, f.main_category_name,"
+			+ " c.sub_category_name, n.title, n.sub_title, n.text, n.open, n.creat_date, n.update_date, n.open_date FROM news n "
+			+ "LEFT JOIN main_categorys f on f.id = n.main_category "
+			+ "LEFT JOIN sub_categorys c on c.id = n.sub_category WHERE "
 			+ "(main_category = :inputMain OR :inputMain IS NULL) "
 			+ "AND (sub_category = :inputSub OR :inputSub IS NULL)"
 			+ "ORDER BY 12 DESC", nativeQuery = true)
@@ -187,9 +187,9 @@ public interface NewsDao extends JpaRepository<News, Integer> {
 			@Param("inputSub") Integer sub);
 	
 //	該当IDのカテゴリ名称を含めているニュースデータを取得する
-	@Query(value = "select n.news_id, n.main_category, n.sub_category, f.main_category_name,"
-			+ " c.sub_category_name, n.title, n.sub_title, n.text, n.open, n.creat_date, n.update_date, n.open_date from news n "
-			+ "left join main_categorys f on f.id = n.main_category "
-			+ "left join sub_categorys c on c.id = n.sub_category " + "WHERE n.news_id = ?1", nativeQuery = true)
+	@Query(value = "SELECT n.news_id, n.main_category, n.sub_category, f.main_category_name,"
+			+ " c.sub_category_name, n.title, n.sub_title, n.text, n.open, n.creat_date, n.update_date, n.open_date FROM news n "
+			+ "LEFT JOIN main_categorys f on f.id = n.main_category "
+			+ "LEFT JOIN sub_categorys c on c.id = n.sub_category " + "WHERE n.news_id = ?1", nativeQuery = true)
 	public List<Map<String, Object>> findFullNewsById(Integer id);
 }

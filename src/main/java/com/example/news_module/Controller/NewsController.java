@@ -33,7 +33,7 @@ public class NewsController {
 	};
 	
 
-//	ニュースを公開に変更する
+//	ニュースの公開か隠蔽
 	@PostMapping("/open_or_hide")
 	public NewsResponse openOrHideNews(@RequestBody NewsRequest req) {
 		return newsService.openOrHideNews(req);
@@ -50,25 +50,25 @@ public class NewsController {
 		return newsService.findAllNewsUser(req);
 	};
 	
-//	全てのニュースを取得する（管理者側、公開日降順）
+//	全てのニュースを取得する（管理者側）
 	@PostMapping("/get_all")
 	public NewsWithCategoryNameVo findAllBySort(@RequestBody NewsRequest req) {
 		return newsService.findAllBySort(req);
 	};
 	
-//	選択したページのニュースを取得する（管理者側、公開日降順）
+//	選択したページのニュースを取得する（管理者側）
 	@PostMapping("/find_all_news")
 	public NewsWithCategoryNameVo findAllNewsBySort(@RequestBody NewsRequest req) {
 		return newsService.findAllNewsBySort(req);
 	};
 
-//	選択したページの検索条件と一致するニュースを取得する（管理者側、公開日降順）
+//	選択したページの検索条件と一致するニュースを取得する（管理者側）
 	@PostMapping("/search_news")
 	public NewsWithCategoryNameVo searchNewsBySort(@RequestBody NewsRequest req) {
 		return newsService.searchNewsBySort(req);
 	};
 	
-//	検索条件と一致するニュースを取得する（管理者側、公開日降順）
+//	検索条件と一致するニュースを取得する（管理者側）
 	@PostMapping("/search_news_A")
 	public NewsWithCategoryNameVo searchNewsAllBySort(@RequestBody NewsRequest req) {
 		return newsService.searchNewsAllBySort(req);
